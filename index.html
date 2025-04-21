@@ -33,11 +33,19 @@
       box-sizing: border-box;
     }
 
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
     button {
       font-size: 3.5vw;
       padding: 1.5vw 4vw;
-      width: 50vw;
-      max-width: 250px;
+      width: 65vw; /* 約130%に拡大 */
+      max-width: 325px; /* 元の250pxの130% */
+      box-sizing: border-box;
     }
   </style>
   <script>
@@ -50,8 +58,10 @@
   <h1>テキストを入力してください</h1>
   <form id="myForm" method="get">
     <input type="text" name="message" placeholder="ここに入力" required>
-    <button type="submit" onclick="setAction('information.html')">ＭＶＰ</button>
-    <button type="submit" onclick="setAction('bd.html')">ハピバ</button>
+    <div class="button-container">
+      <button type="submit" onclick="setAction('information.html')">ＭＶＰ</button>
+      <button type="submit" onclick="setAction('bd.html')">ハピバ</button>
+    </div>
   </form>
 </body>
 </html>
