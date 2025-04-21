@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-image: url('photos/test.jpg'); /* 背景画像のパスを変更 */
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #message-box {
+      width: 80vw;
+      height: 35vh;
+      padding: 1vh 2vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #message-text {
+      font-size: 10vw;
+      line-height: 1;
+      white-space: nowrap;
+      transform-origin: center center;
+      display: inline-block;
+      transform: scaleX(-1); /* 左右反転 */
+    }
+
+    @media (max-width: 600px) { /* iPhone, 小さいスクリーン */
+      #message-box {
+        display: none; /* メニュー（#message-box）を非表示にする */
+      }
+      #message-text {
+        font-size: 20vw;
+      }
+    }
+
+    @media (max-width: 768px) { /* iPad のスクリーンサイズ */
+      #message-box {
+        display: none; /* メニュー（#message-box）を非表示にする */
+      }
+      #message-text {
+        font-size: 15vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="message-box">
+    <div id="message-text"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('message');
+    const textEl = document.getElementById('message-text');
+    const boxEl = document.getElementById('message-box');
+
+    if (message) {
+      textEl.textContent = message;
+
+      function adjustScale() {
+        const boxWidth = boxEl.clientWidth;
+        const boxHeight = boxEl.clientHeight;
+        const textWidth = textEl.scrollWidth;
+        const textHeight = textEl.scrollHeight;
+        const scaleX = boxWidth / textWidth;
+        const scaleY = boxHeight / textHeight;
+        const scale = Math.min(scaleX, scaleY, 1);
+        textEl.style.transform = `scaleX(-1) scale(${scale})`;
+      }
+
+      window.addEventListener('resize', adjustScale);
+      adjustScale();
+    }
+  </script>
+</body>
+</html>
