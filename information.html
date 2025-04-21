@@ -13,8 +13,8 @@
     }
 
     body {
-      background-image: url('photos/test.jpg'); /* 背景画像パス：同じフォルダに配置 */
-      background-size: 100% 100%; 
+      background-image: url('photos/test.jpg'); /* 背景画像のパスを変更 */
+      background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;
       display: flex;
@@ -26,7 +26,6 @@
       width: 80vw;
       height: 35vh;
       padding: 1vh 2vw;
-
       display: flex;
       justify-content: center;
       align-items: center;
@@ -44,13 +43,19 @@
       transform: scaleX(-1); /* 左右反転 */
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 600px) { /* iPhone, 小さいスクリーン */
+      #message-box {
+        display: none; /* メニュー（#message-box）を非表示にする */
+      }
       #message-text {
         font-size: 20vw;
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 768px) { /* iPad のスクリーンサイズ */
+      #message-box {
+        display: none; /* メニュー（#message-box）を非表示にする */
+      }
       #message-text {
         font-size: 15vw;
       }
