@@ -5,107 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Famdam</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
+      font-family: sans-serif;
+      text-align: center;
       height: 100%;
-      width: 100%;
-      overflow: hidden;
-      background: url('photos/hai.jpg') no-repeat center center fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('photos/hai.jpg'); /* 背景画像 */
       background-size: cover;
-      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      background-position: center;
     }
 
     .container {
       display: flex;
-      height: 100%;
-      align-items: center;
+      width: 90%; /* 画面の90%幅に制限 */
+      max-width: 1500px;
       justify-content: space-between;
-      padding: 0 100px; /* 左右に100pxの余白 */
-      box-sizing: border-box;
-      gap: 100px; /* 画像とテキストの間隔 */
-    }
-
-    .images, .texts {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 100px; /* 縦方向にも間隔を開ける */
-      flex: 0 0 auto;
-    }
-
-    .images img {
-      width: auto;
-      max-width: 600px;
-      max-height: 20vh;
-      object-fit: contain;
-    }
-
-    .text-line {
-      display: flex;
+      gap: 5%; /* 画像間の隙間（左右それぞれ5%） */
       align-items: center;
-      white-space: nowrap;
-      gap: 20px; /* ラベルとテキストの間隔 */
     }
 
-    .label {
-      color: white;
+    .image-container {
+      width: 22.5%; /* 画像の幅を調整 */
+      position: relative;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .text-container {
+      position: absolute;
+      top: 50%;
+      left: 100%; /* 画像の右側に文字を配置 */
+      transform: translateY(-50%);
+      font-size: 2.5vw;
       font-weight: bold;
-      font-size: 2vw;
-      min-width: 60px; /* ラベルの幅固定で整列 */
-      text-align: right;
-    }
-
-    .text-content {
       color: white;
-      font-weight: bold;
-      font-size: 3vw;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      max-width: 100%; /* テキストが画像の幅を超えないように */
     }
 
+    /* 画面サイズが小さい場合に対応 */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        gap: 50px;
-      }
-      .images, .texts {
-        gap: 30px;
-      }
-      .text-line {
         justify-content: center;
+        gap: 20px;
       }
-      .label, .text-content {
-        font-size: 6vw;
+
+      .image-container {
+        width: 80%; /* モバイルでは幅を広げる */
+      }
+
+      .text-container {
+        font-size: 5vw; /* スマホ向けのフォントサイズ調整 */
       }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- 団 -->
+    <div class="image-container">
+      <img src="photo/dan.jpg" alt="団の画像">
+      <div class="text-container">
+        <span id="text1"></span>
+      </div>
+    </div>
 
-<div class="container">
-  <div class="images">
-    <img src="photos/dan.jpg" alt="団">
-    <img src="photos/SMALL.jpg" alt="小">
-    <img src="photos/medium.jpg" alt="中">
-    <img src="photos/BIG.jpg" alt="大">
+    <!-- 小 -->
+    <div class="image-container">
+      <img src="photo/SMALL.jpg" alt="小の画像">
+      <div class="text-container">
+        <span id="text2"></span>
+      </div>
+    </div>
+
+    <!-- 中 -->
+    <div class="image-container">
+      <img src="photo/medium.jpg" alt="中の画像">
+      <div class="text-container">
+        <span id="text3"></span>
+      </div>
+    </div>
+
+    <!-- 大 -->
+    <div class="image-container">
+      <img src="photo/BIG.jpg" alt="大の画像">
+      <div class="text-container">
+        <span id="text4"></span>
+      </div>
+    </div>
   </div>
 
-  <div class="texts">
-    <div class="text-line"><span class="label">1:</span><span class="text-content" id="text1"></span></div>
-    <div class="text-line"><span class="label">2:</span><span class="text-content" id="text2"></span></div>
-    <div class="text-line"><span class="label">3:</span><span class="text-content" id="text3"></span></div>
-    <div class="text-line"><span class="label">4:</span><span class="text-content" id="text4"></span></div>
-  </div>
-</div>
-
-<script>
-  const params = new URLSearchParams(window.location.search);
-  document.getElementById('text1').textContent = params.get('text1') || '';
-  document.getElementById('text2').textContent = params.get('text2') || '';
-  document.getElementById('text3').textContent = params.get('text3') || '';
-  document.getElementById('text4').textContent = params.get('text4') || '';
-</script>
-
+  <script>
+    // URLからテキストデータを取得して表示
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('text1').textContent = params.get('text1');
+    document.getElementById('text2').textContent = params.get('text2');
+    document.getElementById('text3').textContent = params.get('text3');
+    document.getElementById('text4').textContent = params.get('text4');
+  </script>
 </body>
 </html>
