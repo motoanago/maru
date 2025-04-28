@@ -21,21 +21,26 @@
 
     .container {
       display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
       width: 90%; /* 画面の90%幅に制限 */
       max-width: 1500px;
-      justify-content: space-between;
-      gap: 5%; /* 画像間の隙間（左右それぞれ5%） */
-      align-items: center;
     }
 
     .image-container {
-      width: 22.5%; /* 画像の幅を調整 */
-      position: relative;
+      width: 100%;
+      height: calc(100vh / 4); /* 画面高さを4分割 */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .image-container img {
-      width: 100%;
-      height: auto;
+      height: 100%;
+      width: auto;
       display: block;
     }
 
@@ -48,7 +53,7 @@
       font-weight: bold;
       color: white;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      max-width: 100%; /* テキストが画像の幅を超えないように */
+      max-width: 100%;
     }
 
     /* 画面サイズが小さい場合に対応 */
@@ -60,7 +65,13 @@
       }
 
       .image-container {
-        width: 80%; /* モバイルでは幅を広げる */
+        flex-direction: column;
+        height: auto;
+      }
+
+      .image-container img {
+        width: 100%; /* スマホでは画像の幅を100%に */
+        height: auto;
       }
 
       .text-container {
@@ -73,34 +84,26 @@
   <div class="container">
     <!-- 団 -->
     <div class="image-container">
-      <img src="photo/dan.jpg" alt="団の画像">
-      <div class="text-container">
-        <span id="text1"></span>
-      </div>
+      <img src="photos/dan.jpg" alt="団の画像">
+      <div class="text-container" id="text1"></div>
     </div>
 
     <!-- 小 -->
     <div class="image-container">
-      <img src="photo/SMALL.jpg" alt="小の画像">
-      <div class="text-container">
-        <span id="text2"></span>
-      </div>
+      <img src="photos/SMALL.jpg" alt="小の画像">
+      <div class="text-container" id="text2"></div>
     </div>
 
     <!-- 中 -->
     <div class="image-container">
-      <img src="photo/medium.jpg" alt="中の画像">
-      <div class="text-container">
-        <span id="text3"></span>
-      </div>
+      <img src="photos/medium.jpg" alt="中の画像">
+      <div class="text-container" id="text3"></div>
     </div>
 
     <!-- 大 -->
     <div class="image-container">
-      <img src="photo/BIG.jpg" alt="大の画像">
-      <div class="text-container">
-        <span id="text4"></span>
-      </div>
+      <img src="photos/BIG.jpg" alt="大の画像">
+      <div class="text-container" id="text4"></div>
     </div>
   </div>
 
