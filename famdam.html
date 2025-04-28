@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Famdam</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: url('photo/hai.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .left, .right {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .left img {
+      width: auto;
+      height: 20%;
+      max-width: 90%;
+      object-fit: contain;
+    }
+
+    .text-block {
+      width: 90%;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5vw;
+      word-break: break-word;
+    }
+
+    @media (max-width: 768px) {
+      .text-block {
+        font-size: 8vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="left">
+  <img src="photo/dan.jpg" id="img1">
+  <img src="photo/SMALL.jpg" id="img2">
+  <img src="photo/medium.jpg" id="img3">
+  <img src="photo/BIG.jpg" id="img4">
+</div>
+
+<div class="right">
+  <div class="text-block" id="text1"></div>
+  <div class="text-block" id="text2"></div>
+  <div class="text-block" id="text3"></div>
+  <div class="text-block" id="text4"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById('text1').textContent = params.get('text1') || '';
+document.getElementById('text2').textContent = params.get('text2') || '';
+document.getElementById('text3').textContent = params.get('text3') || '';
+document.getElementById('text4').textContent = params.get('text4') || '';
+</script>
+
+</body>
+</html>
