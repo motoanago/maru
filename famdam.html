@@ -21,7 +21,7 @@
     .container {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      height: 100%; /* 画面の高さに合わせる */
       width: 90%; /* 画面の90%幅 */
       max-width: 1500px;
       margin-left: 5%; /* 左側の余白 */
@@ -29,45 +29,36 @@
       position: relative;
     }
 
-    .image-container {
+    /* 各画像とそのテキストのコンテナ */
+    .image-text-container {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      height: 25vh; /* 画面の25%に設定 */
-      width: 45%; /* 画面の45%幅 */
+      width: 100%;
+      height: 25vh; /* 画像の高さを画面の25%に設定 */
+    }
+
+    .image-container {
+      width: 45%; /* 画像の幅を画面の45%に設定 */
+      height: 100%; /* 高さを100%に設定 */
     }
 
     .image-container img {
-      width: 100%; /* 画像の幅を100%にして、高さに合わせて表示 */
-      height: 100%; /* 高さを指定 */
+      width: 100%; /* 画像を幅100%で表示 */
+      height: 100%; /* 高さ100%にして埋める */
       object-fit: cover; /* 縦横比を保ちながら画像を埋める */
-      display: block;
     }
 
     .text-container {
-      position: absolute;
-      top: 0;
-      left: 50%; /* 画像の右側にテキストを配置 */
-      width: 45%; /* 画面の右側45%の幅 */
-      transform: translateY(0);
+      width: 45%; /* テキストの幅を画像の隣に合わせる */
+      height: 100%; /* テキストの高さを画像に合わせる */
+      padding: 0 10px;
       font-size: 3vw; /* フォントサイズ調整 */
       font-weight: bold;
       color: white;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       line-height: 1.5;
-    }
-
-    .text-container:nth-child(1) {
-      top: 0;
-    }
-    .text-container:nth-child(2) {
-      top: 25vh;
-    }
-    .text-container:nth-child(3) {
-      top: 50vh;
-    }
-    .text-container:nth-child(4) {
-      top: 75vh;
+      overflow: hidden; /* 長いテキストがはみ出ないように */
     }
 
     /* タブレットなどの小さい画面向けに調整 */
@@ -79,12 +70,12 @@
       }
 
       .image-container {
-        height: 25vh; /* 各画像を画面の25%に設定 */
-        width: 45%; /* 画像の幅を45%に設定 */
+        height: 30vh; /* 各画像を画面の30%に設定 */
+        width: 50%; /* 画像の幅を50%に設定 */
       }
 
       .text-container {
-        font-size: 4vw; /* テキストサイズを調整 */
+        font-size: 5vw; /* フォントサイズを調整 */
       }
     }
   </style>
@@ -92,26 +83,34 @@
 <body>
   <div class="container">
     <!-- 団 -->
-    <div class="image-container">
-      <img src="photos/dan.jpg" alt="団の画像">
+    <div class="image-text-container">
+      <div class="image-container">
+        <img src="photos/dan.jpg" alt="団の画像">
+      </div>
       <div class="text-container" id="text1"></div>
     </div>
 
     <!-- 小 -->
-    <div class="image-container">
-      <img src="photos/SMALL.jpg" alt="小の画像">
+    <div class="image-text-container">
+      <div class="image-container">
+        <img src="photos/SMALL.jpg" alt="小の画像">
+      </div>
       <div class="text-container" id="text2"></div>
     </div>
 
     <!-- 中 -->
-    <div class="image-container">
-      <img src="photos/medium.jpg" alt="中の画像">
+    <div class="image-text-container">
+      <div class="image-container">
+        <img src="photos/medium.jpg" alt="中の画像">
+      </div>
       <div class="text-container" id="text3"></div>
     </div>
 
     <!-- 大 -->
-    <div class="image-container">
-      <img src="photos/BIG.jpg" alt="大の画像">
+    <div class="image-text-container">
+      <div class="image-container">
+        <img src="photos/BIG.jpg" alt="大の画像">
+      </div>
       <div class="text-container" id="text4"></div>
     </div>
   </div>
