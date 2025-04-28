@@ -25,6 +25,14 @@
       padding: 0 5vw;
     }
 
+    input[type="text"] {
+      font-size: 3.5vw;
+      padding: 1.5vw;
+      width: 90vw;
+      max-width: 500px;
+      box-sizing: border-box;
+    }
+
     .input-group {
       display: flex;
       align-items: center;
@@ -70,7 +78,12 @@
 </head>
 <body>
   <h1>名前を入れてボタンを押してもろて</h1>
+
   <form id="myForm" method="get">
+    <!-- 最初からあった1個目のテキストボックス -->
+    <input type="text" name="message" placeholder="ここに入力" required>
+
+    <!-- 追加するラベル付き4個 -->
     <div class="input-group">
       <label for="text1">1: 団</label>
       <input type="text" name="text1" id="text1" placeholder="ここに入力" required>
@@ -88,6 +101,7 @@
       <input type="text" name="text4" id="text4" placeholder="ここに入力" required>
     </div>
 
+    <!-- ボタン -->
     <div class="button-container">
       <button type="submit" onclick="setAction('information.html')">ＭＶＰぞ</button>
       <button type="submit" onclick="setAction('bd.html')">ハピバやで</button>
