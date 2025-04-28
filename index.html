@@ -1,4 +1,4 @@
-ｚ<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -38,30 +38,59 @@
       justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
+      margin-top: 20px;
     }
 
     button {
       font-size: 3.5vw;
       padding: 1.5vw 4vw;
-      width: 80vw; /* 約130%に拡大 */
-      max-width: 400px; /* 元の250pxの130% */
+      width: 80vw;
+      max-width: 400px;
       box-sizing: border-box;
+      cursor: pointer;
     }
   </style>
+
   <script>
     function setAction(actionUrl) {
       document.getElementById('myForm').action = actionUrl;
     }
+
+    function openFamdam() {
+      const text1 = encodeURIComponent(document.getElementById('text1').value);
+      const text2 = encodeURIComponent(document.getElementById('text2').value);
+      const text3 = encodeURIComponent(document.getElementById('text3').value);
+      const text4 = encodeURIComponent(document.getElementById('text4').value);
+      const url = `famdam.html?text1=${text1}&text2=${text2}&text3=${text3}&text4=${text4}`;
+      window.open(url, '_blank'); // 新しいタブで開く
+    }
   </script>
+
 </head>
 <body>
+
   <h1>名前を入れてボタンを押してもろて</h1>
+
   <form id="myForm" method="get">
     <input type="text" name="message" placeholder="ここに入力" required>
+
     <div class="button-container">
       <button type="submit" onclick="setAction('information.html')">ＭＶＰぞ</button>
       <button type="submit" onclick="setAction('bd.html')">ハピバやで</button>
     </div>
+
+    <!-- ▼ここから追加入力ボックス4個▼ -->
+    <input type="text" id="text1" placeholder="1枚目のテキストを入力">
+    <input type="text" id="text2" placeholder="2枚目のテキストを入力">
+    <input type="text" id="text3" placeholder="3枚目のテキストを入力">
+    <input type="text" id="text4" placeholder="4枚目のテキストを入力">
+
+    <div class="button-container">
+      <button type="button" onclick="openFamdam()">別ページ開く</button>
+    </div>
+    <!-- ▲追加ここまで▲ -->
+
   </form>
+
 </body>
 </html>
