@@ -25,11 +25,25 @@
       padding: 0 5vw;
     }
 
-    input[type="text"] {
-      font-size: 3.5vw;
-      padding: 1.5vw;
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       width: 90vw;
       max-width: 500px;
+      box-sizing: border-box;
+    }
+
+    .input-group label {
+      font-size: 3.5vw;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .input-group input[type="text"] {
+      font-size: 3.5vw;
+      padding: 1.5vw;
+      flex: 1;
       box-sizing: border-box;
     }
 
@@ -38,7 +52,6 @@
       justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
-      margin-top: 20px;
     }
 
     button {
@@ -47,50 +60,39 @@
       width: 80vw;
       max-width: 400px;
       box-sizing: border-box;
-      cursor: pointer;
     }
   </style>
-
   <script>
     function setAction(actionUrl) {
       document.getElementById('myForm').action = actionUrl;
     }
-
-    function openFamdam() {
-      const text1 = encodeURIComponent(document.getElementById('text1').value);
-      const text2 = encodeURIComponent(document.getElementById('text2').value);
-      const text3 = encodeURIComponent(document.getElementById('text3').value);
-      const text4 = encodeURIComponent(document.getElementById('text4').value);
-      const url = `famdam.html?text1=${text1}&text2=${text2}&text3=${text3}&text4=${text4}`;
-      window.open(url, '_blank'); // 新しいタブで開く
-    }
   </script>
-
 </head>
 <body>
-
   <h1>名前を入れてボタンを押してもろて</h1>
-
   <form id="myForm" method="get">
-    <input type="text" name="message" placeholder="ここに入力" required>
+    <div class="input-group">
+      <label for="text1">1: 団</label>
+      <input type="text" name="text1" id="text1" placeholder="ここに入力" required>
+    </div>
+    <div class="input-group">
+      <label for="text2">2: 小</label>
+      <input type="text" name="text2" id="text2" placeholder="ここに入力" required>
+    </div>
+    <div class="input-group">
+      <label for="text3">3: 中</label>
+      <input type="text" name="text3" id="text3" placeholder="ここに入力" required>
+    </div>
+    <div class="input-group">
+      <label for="text4">4: 大</label>
+      <input type="text" name="text4" id="text4" placeholder="ここに入力" required>
+    </div>
 
     <div class="button-container">
       <button type="submit" onclick="setAction('information.html')">ＭＶＰぞ</button>
       <button type="submit" onclick="setAction('bd.html')">ハピバやで</button>
+      <button type="submit" onclick="setAction('famdam.html')">ファムダム</button>
     </div>
-
-    <!-- ▼ここから追加入力ボックス4個▼ -->
-    <input type="text" id="text1" placeholder="1枚目のテキストを入力">
-    <input type="text" id="text2" placeholder="2枚目のテキストを入力">
-    <input type="text" id="text3" placeholder="3枚目のテキストを入力">
-    <input type="text" id="text4" placeholder="4枚目のテキストを入力">
-
-    <div class="button-container">
-      <button type="button" onclick="openFamdam()">別ページ開く</button>
-    </div>
-    <!-- ▲追加ここまで▲ -->
-
   </form>
-
 </body>
 </html>
