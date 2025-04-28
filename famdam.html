@@ -21,48 +21,62 @@
       height: 100%;
       align-items: center;
       justify-content: space-between;
-      padding: 0 100px; /* 左右100pxの隙間 */
+      padding: 0 100px; /* 左右に100pxの余白 */
       box-sizing: border-box;
-      gap: 100px; /* 画像とテキストの間に100px */
+      gap: 100px; /* 画像とテキストの間隔 */
     }
 
     .images, .texts {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 100px; /* 縦方向の隙間（画像同士、文字同士） */
-      flex: 0 0 auto; /* サイズ固定 */
+      gap: 100px; /* 縦方向にも間隔を開ける */
+      flex: 0 0 auto;
     }
 
     .images img {
       width: auto;
       max-width: 600px;
-      max-height: 20vh; /* 画面高さに応じて調整 */
+      max-height: 20vh;
       object-fit: contain;
     }
 
-    .texts div {
-      white-space: nowrap; /* 折り返さない */
+    .text-line {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      gap: 20px; /* ラベルとテキストの間隔 */
+    }
+
+    .label {
+      color: white;
+      font-weight: bold;
+      font-size: 2vw;
+      min-width: 60px; /* ラベルの幅固定で整列 */
+      text-align: right;
+    }
+
+    .text-content {
       color: white;
       font-weight: bold;
       font-size: 3vw;
-      text-align: left;
     }
 
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
-        padding: 50px 20px;
+        align-items: center;
+        padding: 20px;
         gap: 50px;
       }
       .images, .texts {
-        flex-direction: column;
-        align-items: center;
         gap: 30px;
       }
-      .texts div {
+      .text-line {
+        justify-content: center;
+      }
+      .label, .text-content {
         font-size: 6vw;
-        text-align: center;
       }
     }
   </style>
@@ -71,17 +85,17 @@
 
 <div class="container">
   <div class="images">
-    <img src="photos/dan.jpg" alt="Image 1">
-    <img src="photos/SMALL.jpg" alt="Image 2">
-    <img src="photos/medium.jpg" alt="Image 3">
-    <img src="photos/BIG.jpg" alt="Image 4">
+    <img src="photos/dan.jpg" alt="団">
+    <img src="photos/SMALL.jpg" alt="小">
+    <img src="photos/medium.jpg" alt="中">
+    <img src="photos/BIG.jpg" alt="大">
   </div>
 
   <div class="texts">
-    <div id="text1"></div>
-    <div id="text2"></div>
-    <div id="text3"></div>
-    <div id="text4"></div>
+    <div class="text-line"><span class="label">1:</span><span class="text-content" id="text1"></span></div>
+    <div class="text-line"><span class="label">2:</span><span class="text-content" id="text2"></span></div>
+    <div class="text-line"><span class="label">3:</span><span class="text-content" id="text3"></span></div>
+    <div class="text-line"><span class="label">4:</span><span class="text-content" id="text4"></span></div>
   </div>
 </div>
 
