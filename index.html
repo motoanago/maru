@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Index</title>
   <style>
     body {
@@ -74,24 +74,35 @@
     function setAction(actionUrl) {
       document.getElementById('myForm').action = actionUrl;
     }
+
+    function openABCPage() {
+      const line1 = document.getElementById("line1").value;
+      const line2 = document.getElementById("line2").value;
+      const url = `abc.html?line1=${encodeURIComponent(line1)}&line2=${encodeURIComponent(line2)}`;
+      window.location.href = url;
+    }
   </script>
 </head>
 <body>
   <h1>名前を入れてクリック</h1>
 
   <form id="myForm" method="get">
-    <!-- 最初からあった1個目のテキストボックス -->
-    <input type="text" name="message" placeholder="ここに入力" >
+    <!-- 最初の入力ボックス -->
+    <input type="text" name="message" placeholder="ここに入力" />
 
-
-
-    <!-- ボタン -->
+    <!-- 上の3つのボタン -->
     <div class="button-container">
       <button type="submit" onclick="setAction('information.html')">MVP_BLACK</button>
       <button type="submit" onclick="setAction('mvp_Pink.html')">MVP_PINK</button>
       <button type="submit" onclick="setAction('bd.html')">BD</button>
-
     </div>
+
+    <!-- 2段のテキストボックス -->
+    <input type="text" id="line1" placeholder="1行目を入力" />
+    <input type="text" id="line2" placeholder="2行目を入力" />
+
+    <!-- abc.html への遷移ボタン -->
+    <button type="button" onclick="openABCPage()">ABC 表示</button>
   </form>
 </body>
 </html>
