@@ -18,19 +18,22 @@
     }
 
     .text-container {
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       color: white;
       font-weight: bold;
-      font-size: 5vw;
+      font-size: 10vw; /* スマホでも大きく見える */
       line-height: 1.5;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      transform: rotate(180deg); /* 180度回転で文字列を反転 */
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="text-container" id="textContent">
-    <!-- JavaScriptで内容を挿入 -->
-  </div>
+  <div class="text-container" id="textContent"></div>
 
   <script>
     function getParam(name) {
