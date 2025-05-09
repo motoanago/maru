@@ -13,7 +13,7 @@
     }
 
     h1 {
-      font-size: 10vw; /* 倍に拡大 */
+      font-size: 5vw;
       margin: 40px 0 20px;
     }
 
@@ -26,15 +26,33 @@
     }
 
     input[type="text"] {
-      font-size: 7vw; /* 倍に拡大 */
-      padding: 3vw;
+      font-size: 3.5vw;
+      padding: 1.5vw;
+      width: 90vw;
+      max-width: 500px;
+      box-sizing: border-box;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       width: 90vw;
       max-width: 500px;
       box-sizing: border-box;
     }
 
     .input-group label {
-      font-size: 7vw; /* 倍に拡大 */
+      font-size: 3.5vw;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .input-group input[type="text"] {
+      font-size: 3.5vw;
+      padding: 1.5vw;
+      flex: 1;
+      box-sizing: border-box;
     }
 
     .button-container {
@@ -45,8 +63,8 @@
     }
 
     button {
-      font-size: 7vw; /* 倍に拡大 */
-      padding: 3vw 6vw;
+      font-size: 3.5vw;
+      padding: 1.5vw 4vw;
       width: 80vw;
       max-width: 400px;
       box-sizing: border-box;
