@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ABC 表示</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: url('photos/pink.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .text-container {
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      font-size: 5vw;
+      line-height: 1.5;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="text-container" id="textContent">
+    <!-- JavaScriptで内容を挿入 -->
+  </div>
+
+  <script>
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name) || '';
+    }
+
+    const line1 = getParam('line1');
+    const line2 = getParam('line2');
+
+    document.getElementById('textContent').innerHTML = `
+      <div>${line1}</div>
+      <div>${line2}</div>
+    `;
+  </script>
+</body>
+</html>
