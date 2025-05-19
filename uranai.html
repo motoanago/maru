@@ -1,240 +1,236 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>まる今日１２星座占いランキング</title>
-  <style>
-    body {
-      font-family: "Yu Gothic", "ヒラギノ角ゴ ProN", "メイリオ", meiryo, sans-serif;
-      padding: 10px;
-      background: #f9f9f9;
-      color: #333;
-      margin-bottom: 70px; /* フッター分の余白 */
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #2196f3;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>まる教愛の１２星座占いランキング</title>
+<style>
+  body {
+    font-family: "Yu Gothic", "ヒラギノ角ゴ ProN", "メイリオ", meiryo, sans-serif;
+    padding: 10px;
+    background: #f9f9f9;
+    color: #333;
+    margin-bottom: 70px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2196f3;
+  }
+  button {
+    display: block;
+    margin: 0 auto 30px auto;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #1769aa;
+  }
+  table {
+    width: 90vw;
+    max-width: 700px;
+    margin: 0 auto 25px auto;
+    border-collapse: collapse;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    background: white;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  th {
+    background-color: #2196f3;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  td {
+    font-size: 1em;
+  }
+  @media (max-width: 480px) {
+    th, td {
+      padding: 8px 6px;
+      font-size: 0.9em;
     }
     button {
-      display: block;
-      margin: 0 auto 30px auto;
-      padding: 12px 25px;
-      font-size: 1.1em;
-      background-color: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #1769aa;
-    }
-    table {
       width: 90vw;
-      max-width: 700px;
-      margin: 0 auto 25px auto;
-      border-collapse: collapse;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      border-radius: 6px;
-      overflow: hidden;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px 12px;
-      text-align: center;
-    }
-    th {
-      background-color: #2196f3;
-      color: white;
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-    td {
       font-size: 1em;
+      padding: 10px 0;
     }
-    /* スマホでの文字サイズ調整 */
-    @media (max-width: 480px) {
-      th, td {
-        padding: 8px 6px;
-        font-size: 0.9em;
-      }
-      button {
-        width: 90vw;
-        font-size: 1em;
-        padding: 10px 0;
-      }
-    }
-    /* 最下部の固定フッターボタン */
-    #backButton {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90vw;
-      max-width: 700px;
-      padding: 14px 0;
-      font-size: 1.1em;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      z-index: 1000;
-      transition: background-color 0.3s ease;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-    }
-    #backButton:hover {
-      background-color: #388e3c;
-    }
-  </style>
+  }
+  #backButton {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 700px;
+    padding: 14px 0;
+    font-size: 1.1em;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  #backButton:hover {
+    background-color: #388e3c;
+  }
+</style>
 </head>
 <body>
-  <h1>12星座占いランキング</h1>
-  <button id="btn">更新する</button>
+<h1>12星座占いランキング</h1>
+<button id="btn">占いを更新</button>
 
-  <table id="resultTable">
-    <thead>
-      <tr>
-        <th>順位</th>
-        <th>星座</th>
-        <th>運勢</th>
-        <th>ラッキーアイテム</th>
-        <th>ラッキーカラー</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<table id="resultTable">
+  <thead>
+    <tr>
+      <th>順位</th>
+      <th>星座</th>
+      <th>運勢</th>
+      <th>ラッキーアイテム</th>
+      <th>ラッキーカラー</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-  <!-- 最下部に戻るボタン -->
-  <a href="index.html" id="backButton" role="button">← 戻る（index.html）</a>
+<a href="index.html" id="backButton" role="button">← 戻る（index.html）</a>
 
-  <script>
-    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5ofp15yoBHQSG2L4ajkFVv70WMoga2i5cpqCwm4nmQW8bDrBTH9rAiOusaUoY7K8qJwhAWugoJl9W/pub?output=tsv";
+<script>
+  const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5ofp15yoBHQSG2L4ajkFVv70WMoga2i5cpqCwm4nmQW8bDrBTH9rAiOusaUoY7K8qJwhAWugoJl9W/pub?output=tsv";
 
-    const maxRows = {
-      star: 12,
-      fortune: 250,
-      item: 100,
-      color: 50
-    };
+  const maxStars = 12;
+  const storageKey = "uranaiResult";
 
-    let stars = [];
-    let fortunes = [];
-    let items = [];
-    let colors = [];
+  let stars = [];
+  let fortunes = [];
+  let items = [];
+  let colors = [];
 
-    const storageKey = "uranaiResult";
-
-    function shuffleArray(arr) {
-      let array = arr.slice();
-      for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+  function shuffleArray(arr) {
+    let array = arr.slice();
+    for (let i = array.length -1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  }
 
-    function parseTSV(tsv) {
-      let lines = tsv.trim().split("\n");
-      stars = [];
-      fortunes = [];
-      items = [];
-      colors = [];
-      lines.forEach(line => {
-        const cols = line.split("\t");
-        if (cols[0]) stars.push(cols[0]);
-        if (cols[1]) fortunes.push(cols[1]);
-        if (cols[2]) items.push(cols[2]);
-        if (cols[3]) colors.push(cols[3]);
+  function parseTSV(tsv) {
+    let lines = tsv.trim().split("\n");
+    stars = [];
+    fortunes = [];
+    items = [];
+    colors = [];
+    lines.forEach(line => {
+      const cols = line.split("\t");
+      if(cols[0]) stars.push(cols[0]);
+      if(cols[1]) fortunes.push(cols[1]);
+      if(cols[2]) items.push(cols[2]);
+      if(cols[3]) colors.push(cols[3]);
+    });
+  }
+
+  function displayResults(results) {
+    const tbody = document.querySelector("#resultTable tbody");
+    tbody.innerHTML = "";
+    results.forEach((row, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${row.star || ""}</td>
+        <td>${row.fortune || ""}</td>
+        <td>${row.item || ""}</td>
+        <td>${row.color || ""}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function generateRanking() {
+    if(stars.length < maxStars){
+      alert("星座のデータが12行未満です。");
+      return [];
+    }
+    // 星座は12個全部使う（A列は12行固定）
+    const selectedStars = stars.slice(0, maxStars);
+
+    // 他は200行程度ある想定でランダムに12個抽出
+    const selectedFortunes = shuffleArray(fortunes).slice(0, maxStars);
+    const selectedItems = shuffleArray(items).slice(0, maxStars);
+    const selectedColors = shuffleArray(colors).slice(0, maxStars);
+
+    let results = [];
+    for(let i=0; i<maxStars; i++){
+      results.push({
+        star: selectedStars[i] || "",
+        fortune: selectedFortunes[i] || "",
+        item: selectedItems[i] || "",
+        color: selectedColors[i] || ""
       });
-      while (stars.length < maxRows.star) stars.push("");
-      while (fortunes.length < maxRows.fortune) fortunes.push("");
-      while (items.length < maxRows.item) items.push("");
-      while (colors.length < maxRows.color) colors.push("");
+    }
+    return results;
+  }
+
+  function saveResults(results){
+    localStorage.setItem(storageKey, JSON.stringify(results));
+  }
+
+  function loadResults(){
+    const saved = localStorage.getItem(storageKey);
+    if(!saved) return null;
+    try{
+      return JSON.parse(saved);
+    }catch{
+      return null;
+    }
+  }
+
+  async function loadData(){
+    try{
+      const res = await fetch(sheetUrl);
+      if(!res.ok) throw new Error("スプレッドシートの取得に失敗しました。");
+      const tsv = await res.text();
+      parseTSV(tsv);
+    }catch(e){
+      alert(e.message);
+    }
+  }
+
+  async function main(){
+    await loadData();
+
+    const saved = loadResults();
+    if(saved){
+      displayResults(saved);
     }
 
-    function displayResults(results) {
-      const tbody = document.querySelector("#resultTable tbody");
-      tbody.innerHTML = "";
-      results.forEach((row, i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${row.star}</td>
-          <td>${row.fortune}</td>
-          <td>${row.item}</td>
-          <td>${row.color}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function generateRanking() {
-      let shuffledStars = shuffleArray(stars).slice(0, maxRows.star);
-      let shuffledFortunes = shuffleArray(fortunes);
-      let shuffledItems = shuffleArray(items);
-      let shuffledColors = shuffleArray(colors);
-
-      let results = [];
-      for (let i = 0; i < maxRows.star; i++) {
-        results.push({
-          star: shuffledStars[i] || "",
-          fortune: shuffledFortunes[i] || "",
-          item: shuffledItems[i] || "",
-          color: shuffledColors[i] || ""
-        });
-      }
-      return results;
-    }
-
-    function saveResults(results) {
-      localStorage.setItem(storageKey, JSON.stringify(results));
-    }
-
-    function loadResults() {
-      const saved = localStorage.getItem(storageKey);
-      if (!saved) return null;
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return null;
-      }
-    }
-
-    async function loadData() {
-      try {
-        const res = await fetch(sheetUrl);
-        if (!res.ok) throw new Error("スプレッドシートの取得に失敗しました。");
-        const tsv = await res.text();
-        parseTSV(tsv);
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    async function main() {
-      await loadData();
-
-      const saved = loadResults();
-      if (saved) {
-        displayResults(saved);
-      }
-
-      document.getElementById("btn").onclick = () => {
-        const results = generateRanking();
+    document.getElementById("btn").onclick = () => {
+      const results = generateRanking();
+      if(results.length > 0){
         displayResults(results);
         saveResults(results);
-      };
+      }
     }
+  }
 
-    main();
-  </script>
+  main();
+</script>
 </body>
 </html>
