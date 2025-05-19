@@ -1,90 +1,68 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>まる今日今日の１２星座占い</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>12星座占いランキング</title>
   <style>
     body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 1em;
-      background: #f8f9fa;
-      color: #333;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 20px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
     h1 {
       text-align: center;
-      font-size: 1.8em;
-      margin-bottom: 1em;
+      margin-bottom: 20px;
     }
-
-    button {
-      display: block;
-      margin: 0 auto 1em;
-      padding: 0.75em 1.5em;
-      font-size: 1.1em;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    .table-container {
-      overflow-x: auto;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 500px;
-      margin: 0 auto;
-      background-color: white;
+      margin-bottom: 15px;
     }
-
     th, td {
-      border: 1px solid #ccc;
-      padding: 0.8em;
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: center;
     }
-
     th {
-      background-color: #007BFF;
-      color: white;
-    }
-
-    tr:nth-child(even) {
       background-color: #f2f2f2;
     }
-
+    button {
+      display: block;
+      margin: 0 auto 30px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0b7dda;
+    }
+    /* スマホ・タブレット対応 */
     @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
+      body {
+        margin: 10px;
       }
-
+      table, th, td {
+        font-size: 14px;
+      }
       button {
-        font-size: 1em;
         width: 100%;
-      }
-
-      table {
-        font-size: 0.9em;
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
-
-  <h1>今日の12星座占い</h1>
-  <button onclick="loadData()">更新</button>
-
-  <div class="table-container">
-    <table id="result">
+  <h1>12星座占いランキング</h1>
+  <button id="refreshBtn">更新して占う</button>
+  <table id="result">
+    <thead>
       <tr>
         <th>順位</th>
         <th>星座</th>
@@ -92,52 +70,110 @@
         <th>ラッキーアイテム</th>
         <th>ラッキーカラー</th>
       </tr>
-    </table>
-  </div>
+    </thead>
+    <tbody>
+      <!-- ここに結果が入る -->
+    </tbody>
+  </table>
 
   <script>
-    async function loadData() {
-      const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5ofp15yoBHQSG2L4ajkFVv70WMoga2i5cpqCwm4nmQW8bDrBTH9rAiOusaUoY7K8qJwhAWugoJl9W/pub?output=tsv');
-      const text = await response.text();
-      const rows = text.trim().split('\n').map(row => row.split('\t'));
+    const STORAGE_KEY = 'uranaiResult';
 
-      const zodiacList = rows.slice(0, 12).map(row => row[0]);
-      const fortuneList = rows.map(row => row[1]).filter(Boolean);
-      const itemList = rows.map(row => row[2]).filter(Boolean);
-      const colorList = rows.map(row => row[3]).filter(Boolean);
-
-      function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
-      }
-
-      const zodiacs = shuffle([...zodiacList]);
-      const fortunes = shuffle([...fortuneList]).slice(0, 12);
-      const items = shuffle([...itemList]).slice(0, 12);
-      const colors = shuffle([...colorList]).slice(0, 12);
-
-      const table = document.getElementById("result");
-      table.innerHTML = `
-        <tr>
-          <th>順位</th>
-          <th>星座</th>
-          <th>運勢</th>
-          <th>ラッキーアイテム</th>
-          <th>ラッキーカラー</th>
-        </tr>
-      `;
-
-      for (let i = 0; i < 12; i++) {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+    // 表示用関数
+    function displayResults(data) {
+      const tbody = document.querySelector('#result tbody');
+      tbody.innerHTML = '';
+      for(let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
           <td>${i + 1}</td>
-          <td>${zodiacs[i]}</td>
-          <td>${fortunes[i]}</td>
-          <td>${items[i]}</td>
-          <td>${colors[i]}</td>
+          <td>${row.zodiac || ''}</td>
+          <td>${row.fortune || ''}</td>
+          <td>${row.item || ''}</td>
+          <td>${row.color || ''}</td>
         `;
-        table.appendChild(row);
+        tbody.appendChild(tr);
       }
     }
+
+    // localStorageに保存
+    function saveToStorage(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    // localStorageから読み込み
+    function loadFromStorage() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : null;
+    }
+
+    // 配列シャッフル関数（Fisher–Yatesアルゴリズム）
+    function shuffle(array) {
+      const arr = array.slice();
+      for(let i = arr.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // GoogleスプレッドシートからTSVを取得してパース
+    async function loadData() {
+      try {
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5ofp15yoBHQSG2L4ajkFVv70WMoga2i5cpqCwm4nmQW8bDrBTH9rAiOusaUoY7K8qJwhAWugoJl9W/pub?output=tsv';
+        const response = await fetch(url);
+        if(!response.ok) throw new Error('データ取得失敗');
+        const text = await response.text();
+
+        const rows = text.trim().split('\n').map(row => row.split('\t'));
+
+        // 列ごとに分けて配列作成
+        // スプレッドシートは「ヘッダーなし」
+        const zodiacList = rows.slice(0,12).map(r => r[0] || '');
+        const fortuneList = rows.map(r => r[1] || '').filter(Boolean);
+        const itemList = rows.map(r => r[2] || '').filter(Boolean);
+        const colorList = rows.map(r => r[3] || '').filter(Boolean);
+
+        // 12星座は12固定、他は数が違うため、12個ずつシャッフルして取る
+        const zodiacs = shuffle(zodiacList);
+        const fortunes = shuffle(fortuneList).slice(0,12);
+        const items = shuffle(itemList).slice(0,12);
+        const colors = shuffle(colorList).slice(0,12);
+
+        const results = [];
+        for(let i = 0; i < 12; i++) {
+          results.push({
+            zodiac: zodiacs[i],
+            fortune: fortunes[i] || '',
+            item: items[i] || '',
+            color: colors[i] || ''
+          });
+        }
+
+        displayResults(results);
+        saveToStorage(results);
+
+      } catch(err) {
+        alert('データの取得に失敗しました。公開設定などをご確認ください。');
+        console.error(err);
+      }
+    }
+
+    // ページ読み込み時に保存結果があれば表示、なければ取得
+    window.onload = () => {
+      const stored = loadFromStorage();
+      if(stored) {
+        displayResults(stored);
+      } else {
+        loadData();
+      }
+    };
+
+    // 更新ボタン押下で再取得
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      loadData();
+    });
   </script>
 </body>
 </html>
