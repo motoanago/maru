@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>12星座占いランキング</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    table { margin: 0 auto; border-collapse: collapse; width: 90%; max-width: 800px; }
+    th, td { border: 1px solid #ccc; padding: 0.5em; }
+    th { background-color: #f0f0f0; }
+    button { padding: 10px 20px; font-size: 16px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>本日の12星座ランキング</h1>
+<button onclick="loadData()">更新</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>順位</th>
+      <th>星座</th>
+      <th>運勢</th>
+      <th>ラッキーアイテム</th>
+      <th>ラッキーカラー</th>
+    </tr>
+  </thead>
+  <tbody id="rankingTable">
+  </tbody>
+</table>
+
+<script>
+const SHEET_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5ofp15yoBHQSG2L4ajkFVv70WMoga2i5cpqCwm4nmQW8bDrBTH9rAiOusaUoY7K8qJwhAWugoJl9W/pub?output=tsv';
+
+async function loadData() {
+  const res = await fetch(SHEET_TSV_URL);
+  const tsv = await res.text();
+  const lines = tsv.trim().split('\n');
+
+  const signs = [];
+  const fortunes = [];
+  const items = [];
+  const colors = [];
+
+  lines.forEach(line => {
+    const [a, b, c, d] = line.split('\t');
+    if (a) signs.push(a);
+    if (b) fortunes.push(b);
+    if (c) items.push(c);
+    if (d) colors.push(d);
+  });
+
+  // 最初の1行（ヘッダー）は除外
+  signs.shift();
+  fortunes.shift();
+  items.shift();
+  colors.shift();
+
+  const shuffledSigns = [...signs].sort(() => Math.random() - 0.5);
+  const tbody = document.getElementById('rankingTable');
+  tbody.innerHTML = '';
+
+  shuffledSigns.forEach((sign, i) => {
+    const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+    const item = items[Math.floor(Math.random() * items.length)];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    tbody.innerHTML += `<tr>
+      <td>${i + 1}</td>
+      <td>${sign}</td>
+      <td>${fortune}</td>
+      <td>${item}</td>
+      <td style="background-color: ${color};">${color}</td>
+    </tr>`;
+  });
+}
+</script>
+
+</body>
+</html>
