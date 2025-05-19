@@ -81,6 +81,21 @@
       const url = `abc.html?line1=${encodeURIComponent(line1)}&line2=${encodeURIComponent(line2)}`;
       window.location.href = url;
     }
+
+    function fillMotivation1() {
+      document.getElementById("line1").value = "目標１００Ｋ";
+      document.getElementById("line2").value = "がんばろう！";
+    }
+
+    function fillMotivation2() {
+      document.getElementById("line1").value = "目標１５０Ｋ";
+      document.getElementById("line2").value = "がんばろう！";
+    }
+
+    function fillMotivation3() {
+      document.getElementById("line1").value = "目標２００Ｋ";
+      document.getElementById("line2").value = "がんばろう！";
+    }
   </script>
 </head>
 <body>
@@ -90,7 +105,7 @@
     <!-- 最初の入力ボックス -->
     <input type="text" name="message" placeholder="ここに入力" />
 
-    <!-- 上の3つのボタン -->
+    <!-- 上のボタン群 -->
     <div class="button-container">
       <button type="submit" onclick="setAction('information.html')">MVP_BLACK</button>
       <button type="submit" onclick="setAction('mvp_Pink.html')">MVP_PINK</button>
@@ -104,6 +119,13 @@
 
     <!-- abc.html への遷移ボタン -->
     <button type="button" onclick="openABCPage()">目標表示</button>
+
+    <!-- 自動入力ボタン -->
+    <div class="button-container" style="margin-top: 20px;">
+      <button type="button" onclick="fillMotivation1()">100K</button>
+      <button type="button" onclick="fillMotivation2()">150K</button>
+      <button type="button" onclick="fillMotivation3()">200K</button>
+    </div>
   </form>
 </body>
 </html>
