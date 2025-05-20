@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>じゃんけん結果</title>
+  <style>
+    body {
+      background-color: #ffe4e1; /* 薄ピンク */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    img {
+      max-width: 80%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <img id="janken-image" src="" alt="じゃんけん結果">
+
+  <script>
+    // GitHub Pagesの画像URL（例として yourusername を入れています）
+    const images = [
+      "https://yourusername.github.io/photos/G.png",
+      "https://yourusername.github.io/photos/C.png",
+      "https://yourusername.github.io/photos/P.png"
+    ];
+
+    // ランダムに選択
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+
+    // 表示
+    document.getElementById("janken-image").src = randomImage;
+  </script>
+</body>
+</html>
