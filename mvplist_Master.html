@@ -52,20 +52,6 @@
 </head>
 <body>
 
-<script>
-  window.onload = function () {
-    const password = "1234";
-    const input = prompt("パスワードを入力してください：");
-
-    if (input !== password) {
-      alert("パスワードが間違っています。");
-      document.body.innerHTML = "<h1 style='color:red;'>アクセスが拒否されました</h1>";
-    } else {
-      loadList(); // 正しいパスワードのときのみ履歴を表示
-    }
-  };
-</script>
-
 <h2>名前入力</h2>
 <input type="text" id="inputText" placeholder="テキストを入力" />
 <div>
@@ -163,7 +149,18 @@
     window.open(`information.html?message=${encoded}`, "_blank");
   }
 
-  window.onload = loadList;
+  // 統合された onload 処理（パスワード確認後に loadList 実行）
+  window.onload = function () {
+    const password = "99";
+    const input = prompt("パスワードを入力してください：");
+
+    if (input !== password) {
+      alert("パスワードが間違っています。");
+      document.body.innerHTML = "<h1 style='color:red;'>アクセスが拒否されました</h1>";
+    } else {
+      loadList();
+    }
+  };
 </script>
 
 </body>
