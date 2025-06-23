@@ -11,12 +11,13 @@
       padding: 5vw;
       margin: 0;
     }
-    input[type="text"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
       max-width: 400px;
       font-size: 1em;
       padding: 0.6em;
       box-sizing: border-box;
+      margin-bottom: 0.5em;
     }
     button {
       padding: 0.6em 1em;
@@ -52,20 +53,45 @@
 </head>
 <body>
 
-<h2>名前入力</h2>
-<input type="text" id="inputText" placeholder="テキストを入力" />
-<div>
-  <button onclick="saveData()">保存</button>
-  <button onclick="openInformation()">表示</button>
-  <button onclick="clearData()">履歴削除</button>
-  <button onclick="location.href='index.html'">戻る</button>
+<!-- パスワード入力画面 -->
+<div id="authArea">
+  <h2>パスワード認証</h2>
+  <input type="password" id="passwordInput" placeholder="パスワードを入力">
+  <button onclick="checkPassword()">認証</button>
+  <p id="errorMessage" style="color:red;"></p>
 </div>
 
-<h3>入力履歴</h3>
-<ul id="list"></ul>
+<!-- メイン画面（認証後に表示） -->
+<div id="mainContent" style="display:none;">
+  <h2>名前入力</h2>
+  <input type="text" id="inputText" placeholder="テキストを入力" />
+  <div>
+    <button onclick="saveData()">保存</button>
+    <button onclick="openInformation()">表示</button>
+    <button onclick="clearData()">履歴削除</button>
+    <button onclick="location.href='index.html'">戻る</button>
+  </div>
+
+  <h3>入力履歴</h3>
+  <ul id="list"></ul>
+</div>
 
 <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycbzy76OiPMGikDUdntIwvq3M2SG9O4-PIb1S_9C0Cjte1Yq3V1m9rr-n5RwNpnROJ-H9/exec";
+  const correctPassword = "m";
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value;
+    const errorMsg = document.getElementById("errorMessage");
+
+    if (input === correctPassword) {
+      document.getElementById("authArea").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      loadList();
+    } else {
+      errorMsg.textContent = "パスワードが間違っています。";
+    }
+  }
 
   function saveData() {
     const text = document.getElementById("inputText").value.trim();
@@ -149,19 +175,6 @@
     const encoded = encodeURIComponent(selectedValue);
     window.open(`information.html?message=${encoded}`, "_blank");
   }
-
-  // 統合された onload 処理（パスワード確認後に loadList 実行）
-  window.onload = function () {
-    const password = "m";
-    const input = prompt("パスワードを入力してください：");
-
-    if (input !== password) {
-      alert("パスワードが間違っています。");
-      document.body.innerHTML = "<h1 style='color:red;'>アクセスが拒否されました</h1>";
-    } else {
-      loadList();
-    }
-  };
 </script>
 
 </body>
