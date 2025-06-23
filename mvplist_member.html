@@ -10,6 +10,7 @@
       background: #f9f9f9;
       padding: 5vw;
       margin: 0;
+      display: none; /* 認証前は非表示 */
     }
     input[type="text"] {
       width: 100%;
@@ -52,6 +53,7 @@
 </head>
 <body>
 
+<!-- 最初にHTMLを一切表示しない（JS有効時にのみ表示） -->
 <script>
   window.onload = function () {
     const password = "1234";
@@ -61,7 +63,8 @@
       alert("パスワードが間違っています。");
       document.body.innerHTML = "<h1 style='color:red;'>アクセスが拒否されました</h1>";
     } else {
-      loadList(); // 正しいパスワードのときのみ履歴を表示
+      document.body.style.display = "block"; // パス後に表示
+      loadList(); // 正常時にのみ履歴を表示
     }
   };
 </script>
