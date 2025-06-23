@@ -10,18 +10,18 @@
       background: #f9f9f9;
       padding: 5vw;
       margin: 0;
-      display: none; /* 認証前は非表示 */
     }
-    input[type="text"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
       max-width: 400px;
       font-size: 1em;
       padding: 0.6em;
       box-sizing: border-box;
+      margin-bottom: 0.5em;
     }
     button {
       padding: 0.6em 1em;
-      margin: 0.5em 0.3em 0 0;
+      margin: 0.3em 0.3em 0.3em 0;
       font-size: 1em;
       cursor: pointer;
     }
@@ -53,33 +53,44 @@
 </head>
 <body>
 
-<!-- 最初にHTMLを一切表示しない（JS有効時にのみ表示） -->
-<script>
-  window.onload = function () {
-    const password = "1234";
-    const input = prompt("パスワードを入力してください：");
-
-    if (input !== password) {
-      alert("パスワードが間違っています。");
-      document.body.innerHTML = "<h1 style='color:red;'>アクセスが拒否されました</h1>";
-    } else {
-      document.body.style.display = "block"; // パス後に表示
-      loadList(); // 正常時にのみ履歴を表示
-    }
-  };
-</script>
-
-<h2>名前入力</h2>
-<input type="text" id="inputText" placeholder="テキストを入力" />
-<div>
-  <button onclick="saveData()">保存</button>
+<!-- 認証エリア -->
+<div id="authArea">
+  <h2>パスワード認証</h2>
+  <input type="password" id="passwordInput" placeholder="パスワードを入力">
+  <button onclick="checkPassword()">認証</button>
+  <p id="errorMessage" style="color:red;"></p>
 </div>
 
-<h3>入力履歴</h3>
-<ul id="list"></ul>
+<!-- メインコンテンツ（認証後に表示） -->
+<div id="mainContent" style="display:none;">
+  <h2>名前入力</h2>
+  <input type="text" id="inputText" placeholder="テキストを入力" />
+  <div>
+    <button onclick="saveData()">保存</button>
+    <button onclick="clearData()">全削除</button>
+    <button onclick="openInformation()">詳細表示</button>
+  </div>
+
+  <h3>入力履歴</h3>
+  <ul id="list"></ul>
+</div>
 
 <script>
+  const correctPassword = "1234"; // パスワード
   const scriptURL = "https://script.google.com/macros/s/AKfycbzy76OiPMGikDUdntIwvq3M2SG9O4-PIb1S_9C0Cjte1Yq3V1m9rr-n5RwNpnROJ-H9/exec";
+
+  function checkPassword() {
+    const input = document.getElementById("passwordInput").value;
+    const errorMsg = document.getElementById("errorMessage");
+
+    if (input === correctPassword) {
+      document.getElementById("authArea").style.display = "none";
+      document.getElementById("mainContent").style.display = "block";
+      loadList();
+    } else {
+      errorMsg.textContent = "パスワードが間違っています。";
+    }
+  }
 
   function saveData() {
     const text = document.getElementById("inputText").value.trim();
