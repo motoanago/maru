@@ -26,7 +26,7 @@
       cursor: pointer;
     }
     ul {
-      margin-top: 2em;
+      margin-top: 1em;
       padding-left: 0;
       list-style-type: none;
     }
@@ -53,7 +53,7 @@
 </head>
 <body>
 
-<!-- パスワード入力画面 -->
+<!-- パスワード認証エリア -->
 <div id="authArea">
   <h2>パスワード認証</h2>
   <input type="password" id="passwordInput" placeholder="パスワードを入力">
@@ -70,10 +70,14 @@
     <button onclick="openInformation()">表示</button>
     <button onclick="clearData()">履歴削除</button>
     <button onclick="location.href='index.html'">戻る</button>
+    <button onclick="loadPastList()">過去履歴</button> <!-- 追加ボタン -->
   </div>
 
   <h3>入力履歴</h3>
   <ul id="list"></ul>
+
+  <h3 id="pastTitle" style="display:none;">過去の履歴</h3>
+  <ul id="pastList"></ul>
 </div>
 
 <script>
@@ -149,6 +153,29 @@
         });
       })
       .catch(err => console.error("読み込みエラー:", err));
+  }
+
+  function loadPastList() {
+    fetch(scriptURL + "?mode=past")
+      .then(res => res.json())
+      .then(data => {
+        const pastList = document.getElementById("pastList");
+        const title = document.getElementById("pastTitle");
+        pastList.innerHTML = "";
+        title.style.display = "block";
+
+        data.reverse().forEach(row => {
+          const date = row[0];
+          const time = row[1];
+          const text = row[2];
+          if (text) {
+            const li = document.createElement("li");
+            li.textContent = `${date}_${time}　貢献者： ${text}`;
+            pastList.appendChild(li);
+          }
+        });
+      })
+      .catch(err => alert("過去履歴の読み込みエラー: " + err));
   }
 
   function openInformation() {
