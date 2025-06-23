@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>入力と履歴表示</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 30px;
+    }
+    input[type="text"] {
+      width: 300px;
+      font-size: 16px;
+      padding: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    ul {
+      margin-top: 20px;
+      padding-left: 0;
+      list-style-type: none; /* 「・」除去 */
+    }
+    li {
+      background: #fff;
+      margin-bottom: 4px; /* コンパクトに */
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      display: flex;
+      align-items: center;
+    }
+    input[type="radio"] {
+      margin-right: 8px;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+
+<h2>メッセージ入力</h2>
+<input type="text" id="inputText" placeholder="テキストを入力" />
+<button onclick="saveData()">保存</button>
+<button onclick="clearData()">履歴削除</button>
+
+<h3>入力履歴</h3>
+<ul id="list"></ul>
+
+<script>
+  // Google Apps ScriptのURLに差し替えてください
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzy76OiPMGikDUdntIwvq3M2SG9O4-PIb1S_9C0Cjte1Yq3V1m9rr-n5RwNpnROJ-H9/exec";
+
+  function saveData() {
+    const text = document.getElementById("inputText").value.trim();
+    if (!text) {
+      alert("テキストを入力してください。");
+      return;
+    }
+    fetch(scriptURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "text=" + encodeURIComponent(text),
+    })
+      .then(res => res.text())
+      .then(() => {
+        document.getElementById("inputText").value = "";
+        loadList();
+      })
+      .catch(err => alert("送信エラー: " + err));
+  }
+
+  function clearData() {
+    if (!confirm("本当にすべての履歴を削除しますか？")) return;
+
+    fetch(scriptURL + "?mode=clear", { method: "GET", cache: "no-store" })
+      .then(res => res.text())
+      .then(result => {
+        if (result === "CLEARED") {
+          document.getElementById("list").innerHTML = "";
+        } else {
+          alert("スプレッドシートの削除に失敗しました");
+        }
+      })
+      .catch(err => alert("削除エラー: " + err));
+  }
+
+  function loadList() {
+    fetch(scriptURL)
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+
+        data.reverse().forEach((row, index) => {
+          const date = row[0];
+          const time = row[1];
+          const text = row[2];
+          if (text) {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <input type="radio" name="entrySelect" value="${index}" />
+              <div><strong>${date}</strong>_<strong>${time}</strong>　貢献者： ${text}</div>
+            `;
+            list.appendChild(li);
+          }
+        });
+      })
+      .catch(err => console.error("読み込みエラー:", err));
+  }
+
+  window.onload = loadList;
+</script>
+
+</body>
+</html>
