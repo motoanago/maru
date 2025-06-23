@@ -46,6 +46,7 @@
 <h2>メッセージ入力</h2>
 <input type="text" id="inputText" placeholder="テキストを入力" />
 <button onclick="saveData()">保存</button>
+<button onclick="openInformation()">表示</button>
 <button onclick="clearData()">履歴削除</button>
 
 <h3>入力履歴</h3>
@@ -115,6 +116,30 @@
 
   window.onload = loadList;
 </script>
+function openInformation() {
+  const radios = document.getElementsByName("entrySelect");
+  let selectedValue = "";
+
+  for (let i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      const li = radios[i].closest("li");
+      const text = li.querySelector("div").textContent;
+      const match = text.match(/貢献者：(.+)/);
+      if (match) {
+        selectedValue = match[1].trim();
+      }
+      break;
+    }
+  }
+
+  if (!selectedValue) {
+    alert("表示する項目を選択してください。");
+    return;
+  }
+
+  const encoded = encodeURIComponent(selectedValue);
+  window.open(`information.html?message=${encoded}`, "_blank");
+}
 
 </body>
 </html>
