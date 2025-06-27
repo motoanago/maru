@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>月別誕生日表示</title>
+  <title>リスト表示</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       margin: 10px;
       padding: 0 10px;
-      max-width: 600px;
+      max-width: 700px;
       margin-left: auto;
       margin-right: auto;
       line-height: 1.6;
@@ -26,8 +26,7 @@
       font-size: 1.1rem;
       border-radius: 4px;
       cursor: pointer;
-      width: 100%;
-      margin-bottom: 20px;
+      margin: 10px 5px 20px 0;
     }
     button:hover {
       background-color: #45a049;
@@ -47,31 +46,74 @@
       border-radius: 4px;
       margin-bottom: 15px;
     }
-    #dataList ul {
-      padding-left: 20px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
     }
-    #dataList li {
-      margin-bottom: 8px;
-      word-break: break-word;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
       font-size: 1rem;
+      word-break: break-word;
     }
-    @media (min-width: 480px) {
-      select {
-        width: auto;
-        min-width: 200px;
-      }
+    th {
+      background-color: #f4f4f4;
+    }
+    /* チェックボックス列幅狭め */
+    .checkbox-cell {
+      width: 40px;
+      text-align: center;
+    }
+    .pos-select {
+      width: 80px;
+    }
+    @media (max-width: 480px) {
       button {
-        width: auto;
-        min-width: 120px;
-        display: inline-block;
+        width: 100%;
+        margin-bottom: 10px;
       }
+      select {
+        width: 100%;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 6px;
+      }
+      td {
+        border: none;
+        padding-left: 50%;
+        position: relative;
+      }
+      td::before {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      td:nth-of-type(1)::before { content: "削除"; }
+      td:nth-of-type(2)::before { content: "日付"; }
+      td:nth-of-type(3)::before { content: "テキスト"; }
+      td:nth-of-type(4)::before { content: "位置"; }
     }
   </style>
 </head>
 <body>
-  <h2>誕生日月別データ一覧</h2>
+  <h2>月別データ一覧</h2>
 
-  <button onclick="location.href='index.html'">← 登録ページに戻る</button>
+  <button onclick="location.href='index.html'">戻る</button>
+  <button id="deleteBtn" disabled>選択行を削除</button>
 
   <label for="monthSelect">表示月</label>
   <select id="monthSelect"></select>
@@ -80,10 +122,14 @@
 
   <script>
     const monthSelect = document.getElementById("monthSelect");
+    const dataList = document.getElementById("dataList");
+    const deleteBtn = document.getElementById("deleteBtn");
     const now = new Date();
     const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-    // 7ヶ月前から7ヶ月後までの選択肢
+    // 月プルダウンに「全データ表示」追加
+    monthSelect.innerHTML = '<option value="">全データ表示</option>';
+
     for (let i = -6; i <= 6; i++) {
       const temp = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const yyyyMM = `${temp.getFullYear()}-${String(temp.getMonth() + 1).padStart(2, '0')}`;
@@ -93,30 +139,108 @@
 
     fetchData(currentMonth);
 
-    monthSelect.addEventListener("change", function () {
-      fetchData(this.value);
+    monthSelect.addEventListener("change", () => {
+      fetchData(monthSelect.value);
     });
 
+    // 選択したチェックボックスがあるか無いかで削除ボタンの有効無効切替
+    function updateDeleteBtn() {
+      const checked = dataList.querySelectorAll('input[type="checkbox"]:checked');
+      deleteBtn.disabled = checked.length === 0;
+    }
+
+    // 削除ボタン押下時の処理
+    deleteBtn.addEventListener("click", () => {
+      if (!confirm("選択した行を削除します。よろしいですか？")) return;
+
+      const checkedBoxes = dataList.querySelectorAll('input[type="checkbox"]:checked');
+      if (checkedBoxes.length === 0) return;
+
+      // 削除対象データの収集（配列に {text, date, pos} 形式で）
+      const deleteItems = [];
+      checkedBoxes.forEach(cb => {
+        const tr = cb.closest('tr');
+        const text = tr.querySelector('.text-cell').innerText;
+        const date = tr.querySelector('.date-cell').innerText;
+        const pos = tr.querySelector('.pos-select').value;
+        deleteItems.push({ text, date, pos });
+      });
+
+      // GAS側の削除用エンドポイントにPOST送信
+      // ここでは例として同じGASのURLに「action":"delete"」付きで送信
+      fetch("https://script.google.com/macros/s/AKfycbxNzV8T9tJIDQ3Uff-R4lXgrcPGXNRSYdAnwHo50Esd7zHlJmhXH-IygtSSg4itxlIBqg/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", items: deleteItems }),
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("削除が完了しました。");
+        fetchData(monthSelect.value); // 再読込
+      })
+      .catch(() => {
+        alert("削除に失敗しました。");
+      });
+    });
+
+    // データ取得＆表示
     function fetchData(month) {
-      const url = "https://script.google.com/macros/s/AKfycbxNzV8T9tJIDQ3Uff-R4lXgrcPGXNRSYdAnwHo50Esd7zHlJmhXH-IygtSSg4itxlIBqg/exec?month=" + month;
+      const url = "https://script.google.com/macros/s/AKfycbxNzV8T9tJIDQ3Uff-R4lXgrcPGXNRSYdAnwHo50Esd7zHlJmhXH-IygtSSg4itxlIBqg/exec" + (month ? "?month=" + month : "");
 
       fetch(url)
         .then(res => res.json())
         .then(data => {
-          const container = document.getElementById("dataList");
           if (!data || data.length === 0) {
-            container.innerHTML = "<p>データがありません。</p>";
+            dataList.innerHTML = "<p>データがありません。</p>";
+            deleteBtn.disabled = true;
             return;
           }
 
-          const listHtml = data.map(row =>
-            `<li>${row.date} - ${row.text}</li>`
-          ).join("");
+          let html = `
+            <table>
+              <thead>
+                <tr>
+                  <th class="checkbox-cell">削除</th>
+                  <th>日付</th>
+                  <th>テキスト</th>
+                  <th>位置</th>
+                </tr>
+              </thead>
+              <tbody>
+          `;
 
-          container.innerHTML = `<ul>${listHtml}</ul>`;
+          data.forEach((row, idx) => {
+            // row.date は yyyy/mm/dd フォーマット想定
+            html += `
+              <tr>
+                <td class="checkbox-cell">
+                  <input type="checkbox" id="cb${idx}" />
+                </td>
+                <td class="date-cell">${row.date}</td>
+                <td class="text-cell">${row.text}</td>
+                <td>
+                  <select class="pos-select" aria-label="名前の位置選択">
+                    <option value="前">前</option>
+                    <option value="後">後</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          });
+
+          html += "</tbody></table>";
+          dataList.innerHTML = html;
+
+          // チェックボックスのchangeイベント登録
+          const checkboxes = dataList.querySelectorAll('input[type="checkbox"]');
+          checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateDeleteBtn);
+          });
+          deleteBtn.disabled = true; // 初期は無効
         })
         .catch(() => {
-          document.getElementById("dataList").innerHTML = "<p>読み込みに失敗しました。</p>";
+          dataList.innerHTML = "<p>読み込みに失敗しました。</p>";
+          deleteBtn.disabled = true;
         });
     }
   </script>
