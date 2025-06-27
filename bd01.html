@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>誕生日登録</title>
+</head>
+<body>
+  <h2>誕生日登録フォーム</h2>
+
+  <label>テキスト: <input type="text" id="inputText" /></label><br><br>
+
+  <label>年:
+    <select id="year"></select>
+  </label>
+  <label>月:
+    <select id="month"></select>
+  </label>
+  <label>日:
+    <select id="day"></select>
+  </label><br><br>
+
+  <button onclick="submitData()">登録</button>
+
+  <p id="status"></p>
+
+  <script>
+    const yearSel = document.getElementById("year");
+    const monthSel = document.getElementById("month");
+    const daySel = document.getElementById("day");
+
+    const today = new Date();
+    const thisYear = today.getFullYear();
+
+    for (let y = thisYear - 10; y <= thisYear + 10; y++) {
+      yearSel.innerHTML += `<option value="${y}">${y}年</option>`;
+    }
+    for (let m = 1; m <= 12; m++) {
+      const mm = String(m).padStart(2, "0");
+      monthSel.innerHTML += `<option value="${mm}">${m}月</option>`;
+    }
+    for (let d = 1; d <= 31; d++) {
+      const dd = String(d).padStart(2, "0");
+      daySel.innerHTML += `<option value="${dd}">${d}日</option>`;
+    }
+
+    yearSel.value = thisYear;
+    monthSel.value = String(today.getMonth() + 1).padStart(2, "0");
+    daySel.value = String(today.getDate()).padStart(2, "0");
+
+    function submitData() {
+      const text = document.getElementById("inputText").value.trim();
+      const yyyy = yearSel.value;
+      const mm = monthSel.value;
+      const dd = daySel.value;
+      const date = `${yyyy}/${mm}/${dd}`;
+
+      if (text === "") {
+        document.getElementById("status").innerText = "テキストを入力してください。";
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbxNzV8T9tJIDQ3Uff-R4lXgrcPGXNRSYdAnwHo50Esd7zHlJmhXH-IygtSSg4itxlIBqg/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, date })
+      });
+
+      document.getElementById("status").innerText = "登録しました。";
+      document.getElementById("inputText").value = "";
+    }
+  </script>
+</body>
+</html>

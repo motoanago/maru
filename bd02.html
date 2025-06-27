@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>月別誕生日データ表示</title>
+</head>
+<body>
+  <h2>月別データ一覧</h2>
+
+  <label>表示月：
+    <select id="monthSelect"></select>
+  </label>
+
+  <div id="dataList" style="margin-top: 20px;"></div>
+
+  <script>
+    const monthSelect = document.getElementById("monthSelect");
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    for (let i = -6; i <= 6; i++) {
+      const temp = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      const yyyyMM = `${temp.getFullYear()}-${String(temp.getMonth() + 1).padStart(2, '0')}`;
+      const label = `${temp.getFullYear()}年${temp.getMonth() + 1}月`;
+      monthSelect.innerHTML += `<option value="${yyyyMM}" ${yyyyMM === currentMonth ? "selected" : ""}>${label}</option>`;
+    }
+
+    fetchData(currentMonth);
+
+    monthSelect.addEventListener("change", function () {
+      fetchData(this.value);
+    });
+
+    function fetchData(month) {
+      const url = "https://script.google.com/macros/s/AKfycbxNzV8T9tJIDQ3Uff-R4lXgrcPGXNRSYdAnwHo50Esd7zHlJmhXH-IygtSSg4itxlIBqg/exec?month=" + month;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("dataList");
+          if (!data || data.length === 0) {
+            container.innerHTML = "<p>データがありません。</p>";
+            return;
+          }
+
+          const listHtml = data.map(row =>
+            `<li>${row.date} - ${row.text}</li>`
+          ).join("");
+
+          container.innerHTML = `<ul>${listHtml}</ul>`;
+        })
+        .catch(() => {
+          document.getElementById("dataList").innerHTML = "<p>読み込みに失敗しました。</p>";
+        });
+    }
+  </script>
+</body>
+</html>
