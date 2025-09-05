@@ -1,64 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <title>誕生日 登録</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>誕生日入力フォーム</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; background-color: #f2f2f2; }
+h2 { text-align: center; color: #333; }
+form { max-width: 400px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+label { display: block; margin-bottom: 15px; font-size: 16px; }
+input[type="text"], input[type="number"] { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+button { width: 100%; padding: 12px; font-size: 18px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; }
+input:disabled, button:disabled { background-color: #ddd; cursor: not-allowed; }
+#result { margin-top: 20px; text-align: center; font-weight: bold; white-space: pre-line; font-size: 18px; }
+</style>
 </head>
 <body>
-  <h1>誕生日 登録</h1>
-  <input id="name" placeholder="名前"><br><br>
-  <select id="mm">
-    <option value="">-- 月 --</option>
-    <script>
-      for (let i = 1; i <= 12; i++) {
-        const v = String(i).padStart(2, '0');
-        document.write(`<option value="${v}">${i}月</option>`);
-      }
-    </script>
-  </select>
-  <select id="dd">
-    <option value="">-- 日 --</option>
-    <script>
-      for (let i = 1; i <= 31; i++) {
-        const v = String(i).padStart(2, '0');
-        document.write(`<option value="${v}">${i}日</option>`);
-      }
-    </script>
-  </select><br><br>
-  <button id="register" disabled>登録</button>
+<h2>まる団専用</h2>
+<h2>あなたの誕生日を教えてね</h2>
+<h2>リスナー名は必ず書いてね</h2>
 
-  <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxvuAbdWgKJhQG9kOevvE3fg3tSzTop34hy8kfZYp1HJSZ5N6eaITa5SR6EaA0Vk3hE/exec';
-    const name = document.getElementById('name');
-    const mm = document.getElementById('mm');
-    const dd = document.getElementById('dd');
-    const register = document.getElementById('register');
+<form id="birthdayForm">
+  <label>名前: <input type="text" name="name" required></label>
+  <label>誕生月: <input type="number" name="month" min="1" max="12" required></label>
+  <label>誕生日: <input type="number" name="day" min="1" max="31" required></label>
+  <label>応援コメント: <input type="text" name="memo"></label>
+  <label>登録パスワード: <input type="text" name="password" required></label>
+  <button type="submit">まるに誕生日を教える</button>
+</form>
 
-    function checkInput() {
-      register.disabled = !(name.value && mm.value && dd.value);
+<p id="result"></p>
+
+<script>
+const form = document.getElementById('birthdayForm');
+const result = document.getElementById('result');
+let submitted = false;
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (submitted) return;
+  submitted = true;
+
+  const formData = new FormData(form);
+  const params = new URLSearchParams(formData);
+  const nameValue = formData.get('name');
+
+  // 送信直後に入力欄とボタンをグレーアウト
+  Array.from(form.elements).forEach(el => el.disabled = true);
+
+  fetch("https://script.google.com/macros/s/AKfycbw8I2szG8HO8PM4N1vB-EQWHesavRcklyrB-oRAA_GKi5oRZd1XbdgNUIMWL1LxaZUt/exec", {
+    method: "POST",
+    body: params
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === "success") {
+      // タイトルとフォームを非表示
+      document.querySelectorAll('h2').forEach(h => h.style.display = 'none');
+      form.style.display = 'none';
+      // 名前を1行目に入れたメッセージを表示
+      result.textContent = nameValue + "\n教えてくれてありがとう♪\nこれからもよろしくね☆\n誕生日は一緒に祝おうね！";
+    } else {
+      // パスワード間違いまたはその他エラー
+      result.textContent = data.message ? data.message : "送信失敗";
+      submitted = false;
+      // 入力欄とボタンを再び有効化
+      Array.from(form.elements).forEach(el => el.disabled = false);
     }
-
-    name.addEventListener('input', checkInput);
-    mm.addEventListener('change', checkInput);
-    dd.addEventListener('change', checkInput);
-
-    register.addEventListener('click', () => {
-      const params = new URLSearchParams({
-        name: name.value,
-        mm: mm.value,
-        dd: dd.value
-      });
-
-      fetch(`${GAS_URL}?${params.toString()}`)
-        .then(res => res.json())
-        .then(() => {
-          alert('登録が完了しました');
-          name.value = '';
-          mm.value = '';
-          dd.value = '';
-          register.disabled = true;
-        });
-    });
-  </script>
+  })
+  .catch(err => {
+    result.textContent = "通信エラー: " + err;
+    submitted = false;
+    Array.from(form.elements).forEach(el => el.disabled = false);
+  });
+});
+</script>
 </body>
 </html>
