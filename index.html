@@ -82,20 +82,6 @@
       window.location.href = url;
     }
 
-    function fillMotivation1() {
-      document.getElementById("line1").value = "目標１００Ｋ";
-      document.getElementById("line2").value = "がんばろう！";
-    }
-
-    function fillMotivation2() {
-      document.getElementById("line1").value = "目標１５０Ｋ";
-      document.getElementById("line2").value = "がんばろう！";
-    }
-
-    function fillMotivation3() {
-      document.getElementById("line1").value = "目標２００Ｋ";
-      document.getElementById("line2").value = "がんばろう！";
-    }
   </script>
 </head>
 <body>
@@ -110,18 +96,9 @@
       <button type="submit" onclick="setAction('information.html')">MVP_BLACK</button>
       <button type="submit" onclick="setAction('mvp_Pink.html')">MVP_PINK</button>
       <button type="submit" onclick="setAction('bd.html')">BD</button>
-      <button type="submit" onclick="setAction('mvplist_Master.html')">貢献者</button>
-      <button type="submit" onclick="setAction('member.html')">メンバー</button>
-      <button type="submit" onclick="setAction('bd01.html')">入力フォーム</button>
-      <button type="submit" onclick="setAction('bd02.html')">リスト閲覧</button>
+      <button type="submit" onclick="setAction('bd01.html')">誕生日入力</button>
+      <button type="submit" onclick="setAction('bd02.html')">誕生日リスト</button>
     </div>
-
-    <!-- 2段のテキストボックス -->
-    <input type="text" id="line1" placeholder="1行目を入力" />
-    <input type="text" id="line2" placeholder="2行目を入力" />
-
-    <!-- abc.html への遷移ボタン -->
-    <button type="button" onclick="openABCPage()">目標表示</button>
 
     <!-- 自動入力ボタン -->
     <div class="button-container" style="margin-top: 20px;">
@@ -132,3 +109,4 @@
   </form>
 </body>
 </html>
+
