@@ -2,28 +2,28 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>今日の占い</title>
+<title>今日の占い結果</title>
 </head>
 <body>
-<h1>占い結果（例のサイト）</h1>
-<button id="refresh">最新結果を表示</button>
+<h1>今日の占い結果</h1>
 <div id="results"></div>
+<button onclick="location.href='paste.html'">結果を更新する</button>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbytFidb-B-aEEb5DWYRlMFK225-IuNiM6IbLYHpqYakBM4kEsB5STfNiz8pJoGTQGNb/exec"; // ←GASのWebアプリURLに置き換え
+const output = JSON.parse(localStorage.getItem("rankResult") || "[]");
 
-document.getElementById("refresh").addEventListener("click", () => {
-  fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-      const div = document.getElementById("results");
-      if (!data.length) { div.innerHTML = "<p>データなし</p>"; return; }
-      div.innerHTML = data.map(d =>
-        `<p>${d.name} → ${d.rank}位: ${d.sign}（ラッキーポイント: ${d.lucky}）</p>`
-      ).join("");
-    })
-    .catch(err => alert("データ取得に失敗しました: " + err));
-});
+const div = document.getElementById("results");
+if (!output.length) {
+  div.innerHTML = "<p>データなし</p>";
+} else {
+  div.innerHTML = output.map(o => {
+    if(o.rank) {
+      return `<p>${o.name} → ${o.rank}位: ${o.sign}（ラッキーポイント: ${o.lucky}）</p>`;
+    } else {
+      return `<p>${o.name} → データなし</p>`;
+    }
+  }).join("");
+}
 </script>
 </body>
 </html>
