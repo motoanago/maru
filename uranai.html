@@ -2,37 +2,109 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>占いランキング</title>
   <style>
-    table { border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #666; padding: 8px 12px; text-align: center; }
-    th { background: #eee; }
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 10px;
+      padding: 0;
+      background: #fafafa;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 320px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: #6c63ff;
+      color: white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .rank {
+      font-weight: bold;
+    }
+
+    /* 順位の色分け */
+    .rank-1 { color: #e91e63; font-size: 1.2rem; }
+    .rank-2 { color: #ff9800; }
+    .rank-3 { color: #2196f3; }
+
+    /* スマホ用調整 */
+    @media (max-width: 480px) {
+      h1 { font-size: 1.2rem; }
+      th, td { font-size: 0.8rem; padding: 8px 5px; }
+    }
   </style>
 </head>
 <body>
-  <h1>今日の占いランキング</h1>
-  <table id="resultTable">
-    <thead>
-      <tr><th>順位</th><th>星座</th><th>ラッキーポイント</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <h1>🌟 今日の占いランキング 🌟</h1>
+
+  <div class="table-container">
+    <table id="resultTable">
+      <thead>
+        <tr><th>順位</th><th>星座</th><th>ラッキーポイント</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
+    // 星座 → アイコン対応表
+    const seizaIcons = {
+      "おひつじ座": "♈",
+      "おうし座": "♉",
+      "ふたご座": "♊",
+      "かに座": "♋",
+      "しし座": "♌",
+      "おとめ座": "♍",
+      "てんびん座": "♎",
+      "さそり座": "♏",
+      "いて座": "♐",
+      "やぎ座": "♑",
+      "みずがめ座": "♒",
+      "うお座": "♓"
+    };
+
     function parseText(text) {
       const lines = text.split(/\n/).map(l => l.trim()).filter(l => l);
       const results = [];
 
       for (let i = 0; i < lines.length; i++) {
-        // 「○位」を探す
         const rankMatch = lines[i].match(/^(\d{1,2})位$/);
         if (rankMatch) {
           const rank = rankMatch[1];
-
-          // 星座名は次の行にある
           const seiza = lines[i + 1] || "";
-
-          // ラッキーポイントを探す
           let luckyPoint = "";
           for (let j = i + 2; j < i + 10 && j < lines.length; j++) {
             const lpMatch = lines[j].match(/^ラッキーポイント：(.+)/);
@@ -41,11 +113,9 @@
               break;
             }
           }
-
           results.push({ rank, seiza, point: luckyPoint });
         }
       }
-
       return results;
     }
 
@@ -54,12 +124,16 @@
       tbody.innerHTML = "";
       results.forEach(r => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.rank}</td><td>${r.seiza}</td><td>${r.point}</td>`;
+        const icon = seizaIcons[r.seiza] || "✨";
+        tr.innerHTML = `
+          <td class="rank rank-${r.rank}">${r.rank}位</td>
+          <td>${icon} ${r.seiza}</td>
+          <td>${r.point}</td>
+        `;
         tbody.appendChild(tr);
       });
     }
 
-    // 実行
     const text = localStorage.getItem("uranaiText") || "";
     const results = parseText(text);
     displayResults(results);
