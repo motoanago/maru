@@ -1,39 +1,57 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>今日の占い結果</title>
+  <meta charset="UTF-8">
+  <title>占いランキング</title>
+  <style>
+    table { border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #666; padding: 8px 12px; text-align: center; }
+    th { background: #eee; }
+  </style>
 </head>
 <body>
-<h1>今日の占い結果</h1>
-<div id="results"></div>
-<button onclick="location.href='paste.html'">更新</button>
+  <h1>今日の占いランキング</h1>
+  <table id="resultTable">
+    <thead>
+      <tr><th>順位</th><th>星座</th><th>ラッキーポイント</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<script>
-// 保存済みデータ
-const output = JSON.parse(localStorage.getItem("rankResult") || "[]");
+  <script>
+    function parseText(text) {
+      const lines = text.split(/\n/).map(l => l.trim()).filter(l => l);
+      const results = [];
 
-// ランキングを1位～12位まで作成
-const div = document.getElementById("results");
+      // 正規表現で「順位 星座 ラッキーポイント：○○」を抽出
+      const regex = /(\d{1,2})位\s*([ぁ-んァ-ヶー一-龠]+座).*?ラッキーポイント：([^\s　]+)/g;
 
-if (!output.length) {
-  div.innerHTML = "<p>データなし</p>";
-} else {
-  // 1位～12位を固定順で表示
-  let html = "";
-  for (let i = 1; i <= 12; i++) {
-    const rankItem = output.find(o => o.rank === i);
-    if (rankItem) {
-      const users = rankItem.users && rankItem.users.length
-        ? rankItem.users.join(", ")
-        : "該当者なし";
-      html += `<p>${i}位: ${rankItem.sign}（ラッキーポイント: ${rankItem.lucky}） → ${users}</p>`;
-    } else {
-      html += `<p>${i}位: データなし</p>`;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        results.push({
+          rank: match[1],
+          seiza: match[2],
+          point: match[3]
+        });
+      }
+
+      return results;
     }
-  }
-  div.innerHTML = html;
-}
-</script>
+
+    function displayResults(results) {
+      const tbody = document.querySelector("#resultTable tbody");
+      tbody.innerHTML = "";
+      results.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${r.rank}</td><td>${r.seiza}</td><td>${r.point}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 実行
+    const text = localStorage.getItem("uranaiText") || "";
+    const results = parseText(text);
+    displayResults(results);
+  </script>
 </body>
 </html>
