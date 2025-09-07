@@ -23,16 +23,27 @@
       const lines = text.split(/\n/).map(l => l.trim()).filter(l => l);
       const results = [];
 
-      // 正規表現で「順位 星座 ラッキーポイント：○○」を抽出
-      const regex = /(\d{1,2})位\s*([ぁ-んァ-ヶー一-龠]+座).*?ラッキーポイント：([^\s　]+)/g;
+      for (let i = 0; i < lines.length; i++) {
+        // 「○位」を探す
+        const rankMatch = lines[i].match(/^(\d{1,2})位$/);
+        if (rankMatch) {
+          const rank = rankMatch[1];
 
-      let match;
-      while ((match = regex.exec(text)) !== null) {
-        results.push({
-          rank: match[1],
-          seiza: match[2],
-          point: match[3]
-        });
+          // 星座名は次の行にある
+          const seiza = lines[i + 1] || "";
+
+          // ラッキーポイントを探す
+          let luckyPoint = "";
+          for (let j = i + 2; j < i + 10 && j < lines.length; j++) {
+            const lpMatch = lines[j].match(/^ラッキーポイント：(.+)/);
+            if (lpMatch) {
+              luckyPoint = lpMatch[1];
+              break;
+            }
+          }
+
+          results.push({ rank, seiza, point: luckyPoint });
+        }
       }
 
       return results;
