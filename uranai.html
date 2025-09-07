@@ -5,12 +5,12 @@
 <title>今日の占い</title>
 </head>
 <body>
-<h1>占い結果</h1>
+<h1>占い結果（例のサイト）</h1>
 <button id="refresh">最新結果を表示</button>
 <div id="results"></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxjIWckohD7Rl8b5l5GUKqMeqrWOaNLlgUF4gws5erMoC2YjFM_OrPA5ugK7FBJtxn8/exec"; // GASのURLに置き換え
+const API_URL = "https://script.google.com/macros/s/AKfycbytFidb-B-aEEb5DWYRlMFK225-IuNiM6IbLYHpqYakBM4kEsB5STfNiz8pJoGTQGNb/exec"; // ←GASのWebアプリURLに置き換え
 
 document.getElementById("refresh").addEventListener("click", () => {
   fetch(API_URL)
