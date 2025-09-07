@@ -7,22 +7,32 @@
 <body>
 <h1>今日の占い結果</h1>
 <div id="results"></div>
-<button onclick="location.href='paste.html'">結果を更新する</button>
+<button onclick="location.href='paste.html'">更新</button>
 
 <script>
+// 保存済みデータ
 const output = JSON.parse(localStorage.getItem("rankResult") || "[]");
 
+// ランキングを1位～12位まで作成
 const div = document.getElementById("results");
+
 if (!output.length) {
   div.innerHTML = "<p>データなし</p>";
 } else {
-  div.innerHTML = output.map(o => {
-    if(o.rank) {
-      return `<p>${o.name} → ${o.rank}位: ${o.sign}（ラッキーポイント: ${o.lucky}）</p>`;
+  // 1位～12位を固定順で表示
+  let html = "";
+  for (let i = 1; i <= 12; i++) {
+    const rankItem = output.find(o => o.rank === i);
+    if (rankItem) {
+      const users = rankItem.users && rankItem.users.length
+        ? rankItem.users.join(", ")
+        : "該当者なし";
+      html += `<p>${i}位: ${rankItem.sign}（ラッキーポイント: ${rankItem.lucky}） → ${users}</p>`;
     } else {
-      return `<p>${o.name} → データなし</p>`;
+      html += `<p>${i}位: データなし</p>`;
     }
-  }).join("");
+  }
+  div.innerHTML = html;
 }
 </script>
 </body>
