@@ -1,57 +1,22 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>占い結果貼り付けページ</title>
+  <meta charset="UTF-8">
+  <title>占いテキスト入力</title>
 </head>
 <body>
-<h1>占い結果貼り付けページ</h1>
-<p>めざまし占いの順位・星座・ラッキーポイントをコピーして貼り付けてください。</p>
-<textarea id="pasteArea" rows="15" cols="80" placeholder="ここに貼り付け"></textarea>
-<br><br>
-<button id="update">ランキングを更新</button>
+  <h1>めざまし占いテキスト貼り付け</h1>
+  <textarea id="inputText" rows="20" cols="80" placeholder="ここにめざまし占いの文章を貼り付けてください"></textarea>
+  <br><br>
+  <button onclick="goNext()">ランキングを見る</button>
 
-<script>
-// GAS WebアプリURL（対象者リスト取得用）
-const USERS_API = "https://script.google.com/macros/s/AKfycbzOKPdI5r-MBoAk2nig_UH0B21ToaESzMKkVm9NYg2i6geyPke9xsEoCmWw657P_zvn/exec"; // ここにデプロイしたURLを入れる
-
-document.getElementById("update").addEventListener("click", async () => {
-  const text = document.getElementById("pasteArea").value;
-  const lines = text.split(/\r?\n/);
-
-  // 占い結果解析
-  let rankData = [];
-  lines.forEach(line => {
-    const m = line.match(/(\d+)位\s*(\S+)\s*ラッキーポイント[:：]\s*(.+)/);
-    if (m) {
-      rankData.push({
-        rank: parseInt(m[1]),
-        sign: m[2],
-        lucky: m[3].trim()
-      });
+  <script>
+    function goNext() {
+      const text = document.getElementById("inputText").value;
+      // localStorage に保存して次のページで取り出す
+      localStorage.setItem("uranaiText", text);
+      location.href = "uranai.html";
     }
-  });
-
-  // GASから対象者取得
-  const res = await fetch(USERS_API);
-  const users = await res.json();
-
-  // ユーザーごとに結果作成
-  const output = users.map(u => {
-    const hit = rankData.find(r => r.sign === u.zodiac);
-    return {
-      name: u.name,
-      rank: hit ? hit.rank : null,
-      sign: u.zodiac,
-      lucky: hit ? hit.lucky : null
-    };
-  });
-
-  // localStorageに保存して結果ページに移動
-  localStorage.setItem("rankResult", JSON.stringify(output));
-  window.location.href = "uranai.html";
-});
-</script>
+  </script>
 </body>
 </html>
-
