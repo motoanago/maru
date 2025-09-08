@@ -1,26 +1,13 @@
-<button id="getData">占い取得</button>
+<button id="getUranai">占いランキング取得</button>
+
 <script>
-document.getElementById('getData').addEventListener('click', async () => {
+document.getElementById('getUranai').addEventListener('click', async () => {
   try {
-    // サイトからデータ取得（簡単な例: コピーできる文字列を取得）
-    const res = await fetch('https://www.fujitv.co.jp/meza/uranai/index.html');
-    const html = await res.text();
-    
-    // 必要な文字列を正規表現で抽出（例: 占いランキング）
-    const match = html.match(/<div class="ranking">(.*?)<\/div>/s);
-    const text = match ? match[1].replace(/<[^>]+>/g, '').trim() : '取得失敗';
-    
-    // GAS Webアプリに送信
-    await fetch('https://script.google.com/macros/s/AKfycbyBK7XvBWn4v7XcL9XbohOkfERX-FEWiHiqBczjcA8iqvIRl6_hnu0eqXS9tQN0XwxF/exec', {
-      method: 'POST',
-      body: JSON.stringify({text}),
-      headers: {'Content-Type': 'application/json'}
-    });
-    
-    alert('スプレッドシートに書き込み完了');
+    const res = await fetch('https://script.google.com/macros/s/AKfycbzRqP5gK-69jlYhDksAbEE1r9bWTIX71VQhaTHNJwwxvi013dji31Zc7WguzbKefWM8/exec'); // GASウェブアプリURLに置き換え
+    const text = await res.text();
+    alert(text);
   } catch (err) {
     alert('エラー: ' + err.message);
   }
 });
 </script>
-
