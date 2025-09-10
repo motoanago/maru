@@ -1,0 +1,46 @@
+<table id="sheetTable">
+  <thead>
+    <tr>
+      <th>公開日</th>
+      <th>タイトル</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/1HTviyXg606u6V4kYY1492IaTtIZW1O0fIpyYaW7jBjw/pub?output=csv"; // スプレッドシート公開用CSV
+
+fetch(csvUrl)
+  .then(res => res.text())
+  .then(data => {
+    const rows = data.split("\n").slice(1); // ヘッダを除く
+    const tbody = document.querySelector("#sheetTable tbody");
+    rows.forEach(row => {
+      const cols = row.split(",");
+      if(cols.length < 4) return; // D列がない場合はスキップ
+      const tr = document.createElement("tr");
+      // 公開日
+      const tdDate = document.createElement("td");
+      tdDate.textContent = cols[0];
+      tr.appendChild(tdDate);
+      // タイトル + リンク
+      const tdTitle = document.createElement("td");
+      const a = document.createElement("a");
+      a.href = "#";
+      a.textContent = cols[1];
+      a.addEventListener("click", () => {
+        const pw = prompt("パスワードを入力してください");
+        if(pw === cols[3]){
+          window.open(cols[2], "_blank");
+        } else {
+          alert("パスワードが違います");
+        }
+      });
+      tdTitle.appendChild(a);
+      tr.appendChild(tdTitle);
+
+      tbody.appendChild(tr);
+    });
+  });
+</script>
