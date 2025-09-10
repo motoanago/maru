@@ -24,32 +24,40 @@
     <tbody></tbody>
   </table>
 
+  <!-- PapaParse (CSVパーサー) をCDNから読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRfrrxT0IM5C_CZzBuzkmsTubSCRlNKRHMECTDozIZsoQhUNOgzPLEmNA1XbyLQt8j1i8gY3awqzwvk/pub?gid=0&single=true&output=csv';
 
     fetch(csvUrl)
       .then(response => response.text())
       .then(data => {
-        const rows = data.split('\n').slice(1); // ヘッダーを除く
+        // PapaParseでCSVを安全にパース
+        const results = Papa.parse(data, {
+          header: false,   // ヘッダーなし
+          skipEmptyLines: true
+        });
+
+        const rows = results.data.slice(1); // 1行目はヘッダーなので除外
         const tableBody = document.querySelector('#benefitsTable tbody');
 
-        rows.forEach(row => {
-          const cols = row.split(',');
-
+        rows.forEach(cols => {
           if (cols.length >= 4) {
             const tr = document.createElement('tr');
 
+            // 公開日
             const tdDate = document.createElement('td');
             tdDate.textContent = cols[0];
             tr.appendChild(tdDate);
 
+            // タイトル
             const tdTitle = document.createElement('td');
             const link = document.createElement('a');
             link.href = '#';
-            link.textContent = cols[1];
+            link.textContent = cols[1]; // 日本語タイトルOK
             link.addEventListener('click', () => {
               const password = prompt('パスワードを入力してください:');
-              if (password === cols[3]) {
+              if (password === cols[3]) { // 日本語パスワードOK
                 window.open(cols[2], '_blank');
               } else {
                 alert('パスワードが違います。');
