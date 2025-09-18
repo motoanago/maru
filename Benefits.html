@@ -8,7 +8,7 @@
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
     th { background-color: #f2f2f2; }
-    a { color: #007bff; text-decoration: none; }
+    a { color: #007bff; text-decoration: none; cursor: pointer; }
     a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -32,7 +32,7 @@
     fetch(csvUrl)
       .then(response => response.text())
       .then(data => {
-        // PapaParseでCSVを安全にパース
+        // PapaParseでCSVをパース
         const results = Papa.parse(data, {
           header: false,   // ヘッダーなし
           skipEmptyLines: true
@@ -53,12 +53,17 @@
             // タイトル
             const tdTitle = document.createElement('td');
             const link = document.createElement('a');
-            link.href = '#';
             link.textContent = cols[1]; // 日本語タイトルOK
             link.addEventListener('click', () => {
               const password = prompt('パスワードを入力してください:');
               if (password === cols[3]) { // 日本語パスワードOK
-                window.open(cols[2], '_blank');
+                // スマートチップ対策：文字列からURLを抽出
+                const match = cols[2].match(/https?:\/\/\S+/);
+                if (match) {
+                  window.open(match[0], '_blank');
+                } else {
+                  alert('有効なURLが取得できません。管理者に確認してください。');
+                }
               } else {
                 alert('パスワードが違います。');
               }
