@@ -1,109 +1,81 @@
-function doGet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getActiveSheet();
-  const lastRow = sheet.getLastRow();
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benefits</title>
+  <style>
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #f2f2f2; }
+    a { color: #007bff; text-decoration: none; cursor: pointer; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>Benefits</h1>
+  <table id="benefitsTable">
+    <thead>
+      <tr>
+        <th>公開日</th>
+        <th>タイトル</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-  let data = [];
-  for (let r = 2; r <= lastRow; r++) {
-    // A列：公開日（文字列として取得）
-    let published = sheet.getRange(r, 1).getDisplayValue(); 
-    // B列：タイトル
-    let title = sheet.getRange(r, 2).getDisplayValue();
-    // C列：リンク（スマートチップ対応）
-    let urlCell = sheet.getRange(r, 3);
-    let formula = urlCell.getFormula();
-    let url = "";
-    if (formula && formula.startsWith("=HYPERLINK(")) {
-      // =HYPERLINK("URL","名前") 形式からURLを抽出
-      const match = formula.match(/"(.*?)"/);
-      if (match) url = match[1];
-    } else {
-      url = urlCell.getDisplayValue(); // 通常のURL
-    }
-    // D列：接続パスワード
-    let password = sheet.getRange(r, 4).getDisplayValue(); 
+  <!-- PapaParse (CSVパーサー) をCDNから読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRfrrxT0IM5C_CZzBuzkmsTubSCRlNKRHMECTDozIZsoQhUNOgzPLEmNA1XbyLQt8j1i8gY3awqzwvk/pub?gid=0&single=true&output=csv';
 
-    if (title && url) {
-      data.push([published, title, url, password]);
-    }
-  }
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(data => {
+        // PapaParseでCSVをパース
+        const results = Papa.parse(data, {
+          header: false,   // ヘッダーなし
+          skipEmptyLines: true
+        });
 
-  let html = `
-  <!DOCTYPE html>
-  <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リンク集</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 10px;
-        background: #f4f4f4;
-      }
-      h2 {
-        text-align: center;
-        margin-bottom: 15px;
-      }
-      .card {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        padding: 15px;
-        margin-bottom: 15px;
-      }
-      .date {
-        font-size: 14px;
-        color: #888;
-        margin-bottom: 6px;
-      }
-      .title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 8px;
-      }
-      .link {
-        display: inline-block;
-        padding: 8px 12px;
-        background: #007bff;
-        color: white;
-        border-radius: 6px;
-        text-decoration: none;
-        margin-top: 6px;
-      }
-      .link:hover {
-        background: #0056b3;
-      }
-      .password {
-        font-size: 14px;
-        color: #555;
-        margin-top: 8px;
-        word-break: break-all;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>リンク集</h2>
-  `;
+        const rows = results.data.slice(1); // 1行目はヘッダーなので除外
+        const tableBody = document.querySelector('#benefitsTable tbody');
 
-  data.forEach(row => {
-    let [published, title, url, password] = row;
-    html += `
-    <div class="card">
-      <div class="date">${published}</div>
-      <div class="title">${title}</div>
-      <a class="link" href="${url}" target="_blank">開く</a>
-      ${password ? `<div class="password">パスワード: ${password}</div>` : ""}
-    </div>
-    `;
-  });
+        rows.forEach(cols => {
+          if (cols.length >= 4) {
+            const tr = document.createElement('tr');
 
-  html += `
-  </body>
-  </html>
-  `;
+            // 公開日
+            const tdDate = document.createElement('td');
+            tdDate.textContent = cols[0];
+            tr.appendChild(tdDate);
 
-  return HtmlService.createHtmlOutput(html)
-                    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
+            // タイトル
+            const tdTitle = document.createElement('td');
+            const link = document.createElement('a');
+            link.textContent = cols[1]; // 日本語タイトルOK
+            link.addEventListener('click', () => {
+              const password = prompt('パスワードを入力してください:');
+              if (password === cols[3]) { // 日本語パスワードOK
+                // スマートチップ対策：文字列からURLを抽出
+                const match = cols[2].match(/https?:\/\/\S+/);
+                if (match) {
+                  window.open(match[0], '_blank');
+                } else {
+                  alert('有効なURLが取得できません。管理者に確認してください。');
+                }
+              } else {
+                alert('パスワードが違います。');
+              }
+            });
+            tdTitle.appendChild(link);
+            tr.appendChild(tdTitle);
+
+            tableBody.appendChild(tr);
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching CSV:', error));
+  </script>
+</body>
+</html>
