@@ -24,12 +24,13 @@
     }
 
     .image-block img {
-      width: 80%;           /* 画面幅の90%に調整 */
-      max-width: 250px;     /* 最大幅を500pxに制限 */
+      width: 80%;           /* 画面幅の80%に調整 */
+      max-width: 250px;     /* 最大幅250px */
       height: auto;         /* 高さは自動調整 */
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       transition: transform 0.2s;
+      cursor: default;      /* クリック感なし */
     }
 
     .image-block img:hover {
@@ -37,14 +38,16 @@
     }
 
     .caption {
-      font-size: 1em;
+      font-size: 0.9em;
       margin-top: 10px;
       color: #333;
     }
 
-    a.download-link {
-      text-decoration: none;
-      color: inherit;
+    .caption small {
+      display: block;
+      font-size: 0.8em;
+      color: #555;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -54,25 +57,27 @@
   <h1>応援ありがとう</h1>
 
   <div class="image-block">
-    <a href="/maru/photos/202601_12902796.jpg" download class="download-link">
-      <img src="/maru/photos/202601_12902796.jpg" alt="汎用版">
-    </a>
-    <div class="caption">汎用</div>
+    <img src="/maru/photos/202601_12902796.jpg" alt="汎用版">
+    <div class="caption">
+      汎用
+      <small>※画像を長押ししてカメラロールに保存してください</small>
+    </div>
   </div>
 
   <div class="image-block">
-    <a href="/maru/photos/202601_14402560.jpg" download class="download-link">
-      <img src="/maru/photos/202601_14402560.jpg" alt="iPhone用">
-    </a>
-    <div class="caption">iPhone用</div>
+    <img src="/maru/photos/202601_14402560.jpg" alt="iPhone用">
+    <div class="caption">
+      iPhone用
+      <small>※画像を長押ししてカメラロールに保存してください</small>
+    </div>
   </div>
 
   <div class="image-block">
-    <a href="/maru/photos/202601_7201600.jpg" download class="download-link">
-      <img src="/maru/photos/202601_7201600.jpg" alt="軽量版">
-    </a>
-    <div class="caption">軽量版</div>
+    <img src="/maru/photos/202601_7201600.jpg" alt="軽量版">
+    <div class="caption">
+      軽量版
+      <small>※画像を長押ししてカメラロールに保存してください</small>
+    </div>
   </div>
 </body>
 </html>
-
