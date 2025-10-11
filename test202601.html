@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>１月まちうけ</title>
+  <title>対象ギフトカレンダー 2026年1月</title>
   <style>
     body {
       font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
@@ -12,28 +12,36 @@
       padding: 20px;
       text-align: center;
     }
+
     h1 {
       font-size: 1.4em;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      line-height: 1.4;
     }
+
     .image-block {
       margin-bottom: 40px;
     }
+
     .image-block img {
-      max-width: 100%;
-      height: auto;
+      width: 90%;           /* 画面幅の90%に調整 */
+      max-width: 500px;     /* 最大幅を500pxに制限 */
+      height: auto;         /* 高さは自動調整 */
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       transition: transform 0.2s;
     }
+
     .image-block img:hover {
       transform: scale(1.02);
     }
+
     .caption {
       font-size: 1em;
       margin-top: 10px;
       color: #333;
     }
+
     a.download-link {
       text-decoration: none;
       color: inherit;
@@ -46,25 +54,24 @@
   <h1>応援ありがとう</h1>
 
   <div class="image-block">
-    <a href="../maru/photos/202601_12902796.jpg" download class="download-link">
-      <img src="../maru/photos/202601_12902796.jpg" alt="汎用版">
+    <a href="/maru/photos/202601_12902796.jpg" download class="download-link">
+      <img src="/maru/photos/202601_12902796.jpg" alt="汎用版">
     </a>
     <div class="caption">汎用</div>
   </div>
 
   <div class="image-block">
-    <a href="../maru/photos/202601_14402560.jpg" download class="download-link">
-      <img src="../maru/photos/202601_14402560.jpg" alt="iPhone用">
+    <a href="/maru/photos/202601_14402560.jpg" download class="download-link">
+      <img src="/maru/photos/202601_14402560.jpg" alt="iPhone用">
     </a>
     <div class="caption">iPhone用</div>
   </div>
 
   <div class="image-block">
-    <a href="../maru/photos/202601_7201600.jpg" download class="download-link">
-      <img src="../maru/photos/202601_7201600.jpg" alt="軽量版">
+    <a href="/maru/photos/202601_7201600.jpg" download class="download-link">
+      <img src="/maru/photos/202601_7201600.jpg" alt="軽量版">
     </a>
     <div class="caption">軽量版</div>
   </div>
 </body>
 </html>
-
