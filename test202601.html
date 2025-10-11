@@ -78,6 +78,13 @@
     #submit-btn:hover {
       background-color: #45a049;
     }
+
+    #password-prompt small {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.8em;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -85,8 +92,9 @@
   <!-- パスワード入力画面 -->
   <div id="password-prompt">
     <h1>パスワードを入力してください</h1>
-    <input type="password" id="password-input" placeholder="パスワード">
+    <input type="text" id="password-input" placeholder="パスワード">
     <button id="submit-btn">送信</button>
+    <small>※日本語で「応援する」と入力してください</small>
   </div>
 
   <!-- 本コンテンツ -->
