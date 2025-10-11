@@ -13,6 +13,10 @@
       text-align: center;
     }
 
+    #content {
+      display: none; /* 初期状態は非表示 */
+    }
+
     h1 {
       font-size: 1.4em;
       margin-bottom: 20px;
@@ -24,13 +28,13 @@
     }
 
     .image-block img {
-      width: 80%;           /* 画面幅の80%に調整 */
-      max-width: 250px;     /* 最大幅250px */
-      height: auto;         /* 高さは自動調整 */
+      width: 80%;
+      max-width: 250px;
+      height: auto;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       transition: transform 0.2s;
-      cursor: default;      /* クリック感なし */
+      cursor: default;
     }
 
     .image-block img:hover {
@@ -49,37 +53,97 @@
       color: #555;
       margin-top: 5px;
     }
+
+    /* パスワード入力用 */
+    #password-prompt {
+      margin-top: 100px;
+    }
+    #password-input {
+      font-size: 1em;
+      padding: 8px;
+      width: 200px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #submit-btn {
+      font-size: 1em;
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+    #submit-btn:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 <body>
-  <h1>サブメン対象ギフトカレンダー</h1>
-  <h1>2026年1月</h1>
-  <h1>応援ありがとう</h1>
-  <h1>ほしいカレンダーを長押しして保存してね！</h1>
 
-  <div class="image-block">
-    <img src="/maru/photos/202601_12902796.jpg" alt="汎用版">
-    <div class="caption">
-      汎用
-      <small>※画像を長押ししてカメラロールに保存してください</small>
+  <!-- パスワード入力画面 -->
+  <div id="password-prompt">
+    <h1>パスワードを入力してください</h1>
+    <input type="password" id="password-input" placeholder="パスワード">
+    <button id="submit-btn">送信</button>
+  </div>
+
+  <!-- 本コンテンツ -->
+  <div id="content">
+    <h1>サブメン対象ギフトカレンダー</h1>
+    <h1>2026年1月</h1>
+    <h1>応援ありがとう</h1>
+
+    <div class="image-block">
+      <img src="/maru/photos/202601_12902796.jpg" alt="汎用版">
+      <div class="caption">
+        汎用
+        <small>※画像を長押ししてカメラロールに保存してください</small>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <img src="/maru/photos/202601_14402560.jpg" alt="iPhone用">
+      <div class="caption">
+        iPhone用
+        <small>※画像を長押ししてカメラロールに保存してください</small>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <img src="/maru/photos/202601_7201600.jpg" alt="軽量版">
+      <div class="caption">
+        軽量版
+        <small>※画像を長押ししてカメラロールに保存してください</small>
+      </div>
     </div>
   </div>
 
-  <div class="image-block">
-    <img src="/maru/photos/202601_14402560.jpg" alt="iPhone用">
-    <div class="caption">
-      iPhone用
-      <small>※画像を長押ししてカメラロールに保存してください</small>
-    </div>
-  </div>
+  <script>
+    const correctPassword = "応援する"; // 日本語パスワード
+    const passwordPrompt = document.getElementById("password-prompt");
+    const content = document.getElementById("content");
+    const input = document.getElementById("password-input");
+    const button = document.getElementById("submit-btn");
 
-  <div class="image-block">
-    <img src="/maru/photos/202601_7201600.jpg" alt="軽量版">
-    <div class="caption">
-      軽量版
-      <small>※画像を長押ししてカメラロールに保存してください</small>
-    </div>
-  </div>
+    button.addEventListener("click", () => {
+      if (input.value === correctPassword) {
+        passwordPrompt.style.display = "none";
+        content.style.display = "block";
+      } else {
+        alert("パスワードが違います");
+        input.value = "";
+      }
+    });
+
+    // Enterキーでも送信可能
+    input.addEventListener("keyup", (event) => {
+      if (event.key === "Enter") {
+        button.click();
+      }
+    });
+  </script>
+
 </body>
 </html>
-
