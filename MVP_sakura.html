@@ -94,25 +94,25 @@
       adjustScale();
     }
 
-    // 🌸 桜吹雪（回転＋ふわふわ）
+    // 🌸 クリックで桜クラッカー（連打OK）
     document.addEventListener('click', function () {
 
       function fire(side) {
         confetti({
-          particleCount: 70,
-          spread: 120,
-          startVelocity: 20,
-          gravity: 0.35,
-          ticks: 450,
-          scalar: Math.random() * 0.6 + 0.5,
-          drift: side === 'left' ? 0.6 : -0.6,
+          particleCount: 180,           // ボリューム
+          spread: 75,                  // 広がり（元の感じ）
+          startVelocity: 60,           // 勢い（重要）
+          gravity: 0.55,               // 少し軽くして桜感
+          ticks: 320,
+          scalar: Math.random() * 0.8 + 1.2, // サイズばらつき
+
           origin: {
             x: side === 'left' ? 0 : 1,
             y: 1
           },
-          angle: side === 'left' ? 70 : 110,
 
-          // 🌸 桜カラー
+          angle: side === 'left' ? 60 : 120,
+
           colors: [
             '#FFC0CB',
             '#FFB6C1',
@@ -121,28 +121,23 @@
             '#FFF0F5'
           ],
 
-          // 🌸 花びらっぽく（楕円風）
           shapes: ['circle'],
 
-          // 🌸 回転を強調
-          spin: Math.random() * 2 + 1
+          drift: side === 'left' ? 0.8 : -0.8, // 横揺れ
+
+          spin: Math.random() * 3 + 2           // 回転（ヒラヒラ）
         });
       }
 
-      // 1回目
+      // メイン発射（元の動き）
       fire('left');
       fire('right');
 
-      // 少し遅れて追加（自然な舞い）
+      // 少し遅らせて追加（自然な広がり）
       setTimeout(() => {
         fire('left');
         fire('right');
-      }, 180);
-
-      setTimeout(() => {
-        fire('left');
-        fire('right');
-      }, 360);
+      }, 120);
 
     });
   </script>
