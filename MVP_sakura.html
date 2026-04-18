@@ -112,12 +112,24 @@ function getColors(type){
     case 'yellow': return ['#FFD700','#ffe45c','#fff3a3'];
     case 'blue':   return ['#00CFFF','#66e0ff','#b3f0ff'];
     case 'navy':   return ['#3D5AFE','#6f85ff','#aab8ff'];
-    case 'green':  return ['#4CAF50','#81c784','#b9f6ca'];
+    case 'green':  return ['#2E7D32','#4CAF50','#81C784'];
     case 'lime':   return ['#8BC34A','#aed581','#dcedc8'];
     case 'purple': return ['#B39DDB','#d1c4e9','#ede7f6'];
     case 'white':  return ['#ffffff','#eeeeee','#dddddd'];
+
+    // ★未選択（通常）
     default:
-      return ['#FF69B4','#FF3B3B','#00CFFF'];
+      return [
+        '#FF69B4', // ピンク
+        '#FF3B3B', // 赤
+        '#FFA500', // オレンジ
+        '#FFD700', // 黄
+        '#00CFFF', // 青
+        '#3D5AFE', // ネイビー
+        '#4CAF50', // 緑
+        '#8BC34A', // ライム
+        '#B39DDB'  // 紫
+      ];
   }
 }
 
