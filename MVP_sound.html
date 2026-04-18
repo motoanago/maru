@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-image: url('photos/mvp2.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #message-box {
+      width: 80vw;
+      height: 35vh;
+      padding: 1vh 2vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #message-text {
+      font-size: 12vw;
+      line-height: 1;
+      white-space: nowrap;
+      transform-origin: center center;
+      display: inline-block;
+      transform: scaleX(-1);
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      color: white;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      #message-text {
+        font-size: 20vw;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #message-text {
+        font-size: 15vw;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="message-box">
+    <div id="message-text"></div>
+  </div>
+
+  <!-- 紙吹雪 -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('message');
+    const colorType = params.get('color') || 'normal';
+
+    const textEl = document.getElementById('message-text');
+    const boxEl = document.getElementById('message-box');
+
+    if (message) {
+      textEl.textContent = message;
+
+      function adjustScale() {
+        const boxWidth = boxEl.clientWidth;
+        const boxHeight = boxEl.clientHeight;
+        const textWidth = textEl.scrollWidth;
+        const textHeight = textEl.scrollHeight;
+        const scaleX = boxWidth / textWidth;
+        const scaleY = boxHeight / textHeight;
+        const scale = Math.min(scaleX, scaleY, 1);
+        textEl.style.transform = `scaleX(-1) scale(${scale})`;
+      }
+
+      window.addEventListener('resize', adjustScale);
+      adjustScale();
+    }
+
+    function getColors(type){
+      switch(type){
+        case 'pink': return ['#FF69B4','#FFB6C1','#FFC0CB'];
+        case 'red': return ['#FF0000','#FF4D4D','#FF9999'];
+        case 'orange': return ['#FF8C00','#FFA500','#FFD180'];
+        case 'yellow': return ['#FFC107','#FFD700','#FFF59D'];
+        case 'blue': return ['#0099CC','#00CFFF','#B3ECFF'];
+        case 'navy': return ['#0000FF','#4D66FF','#99A3FF'];
+        case 'green': return ['#2E7D32','#4CAF50','#A5D6A7'];
+        case 'lime': return ['#689F38','#8BC34A','#DCEDC8'];
+        case 'purple': return ['#7B1FA2','#A18CD1','#E1BEE7'];
+        case 'white': return ['#FFFFFF','#EEEEEE','#CCCCCC'];
+        default: return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
+      }
+    }
+
+    // 🔊 リアル寄りクラッカー音（ノイズ＋爆発感）
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playPopSound() {
+      const bufferSize = audioCtx.sampleRate * 0.2;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      // ホワイトノイズ生成（破裂音の元）
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+
+      // 低音を少し強調（ドンッ感）
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(1200, audioCtx.currentTime);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      noise.start();
+      noise.stop(audioCtx.currentTime + 0.2);
+    }
+
+    document.addEventListener('click', function () {
+
+      // 🔊 2回鳴らしてクラッカー感アップ
+      playPopSound();
+      setTimeout(playPopSound, 80);
+
+      function fire(side) {
+        confetti({
+          particleCount: 180,
+          spread: 75,
+          startVelocity: 60,
+          gravity: 0.55,
+          ticks: 320,
+          scalar: Math.random() * 1.2 + 1.4,
+          origin: {
+            x: side === 'left' ? 0 : 1,
+            y: 1
+          },
+          angle: side === 'left' ? 60 : 120,
+          colors: getColors(colorType),
+          shapes: ['circle'],
+          drift: side === 'left' ? 0.8 : -0.8,
+          spin: Math.random() * 3 + 2
+        });
+      }
+
+      fire('left');
+      fire('right');
+
+      setTimeout(() => {
+        fire('left');
+        fire('right');
+      }, 120);
+    });
+  </script>
+
+</body>
+</html>
