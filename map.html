@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>ハートミー全国制覇</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#e6f4ff;
+  overflow:hidden;
+}
+
+.container{
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ===== PC ===== */
+
+.map-area{
+  width:70%;
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#d0ecff;
+  overflow:hidden;
+  position:relative;
+  touch-action:none;
+}
+
+.map-wrapper{
+  transform-origin:center center;
+}
+
+.map-area svg{
+  width:100%;
+  max-height:95vh;
+  height:auto;
+}
+
+.list-area{
+  width:30%;
+  overflow-y:auto;
+  padding:15px;
+  background:#fff;
+  border-left:2px solid #b5dfff;
+  touch-action:pan-y;
+}
+
+.pref-btn{
+  width:100%;
+  padding:6px 10px;
+  margin-bottom:6px;
+  border:1px solid #ccc;
+  background:#f8f8f8;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+}
+
+.pref-btn.active{
+  background:red;
+  color:white;
+}
+
+.region-name{
+  font-size:11px;
+  color:#666;
+}
+
+.pref-btn.active .region-name{
+  color:white;
+}
+
+.prefecture{
+  fill:#eee;
+  stroke:#000;
+  cursor:pointer;
+}
+
+.prefecture.active{
+  fill:red !important;
+}
+
+/* リセットボタン少し強調 */
+.reset-btn{
+  background:#333;
+  color:#fff;
+  font-weight:bold;
+}
+
+/* ===== スマホ ===== */
+
+@media screen and (max-width:768px){
+
+  .container{
+    flex-direction:column;
+  }
+
+  .map-area{
+    width:100%;
+    flex:1;
+  }
+
+  .list-area{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:20vh;
+    overflow-y:auto;
+    padding:8px;
+    border-left:none;
+    border-top:2px solid #b5dfff;
+  }
+
+  .pref-btn{
+    font-size:13px;
+    padding:5px 8px;
+    margin-bottom:5px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="map-area" id="mapArea">
+    <div class="map-wrapper" id="mapWrapper"></div>
+  </div>
+  <div class="list-area" id="pref-list"></div>
+</div>
+
+<script>
+
+/* ===== 都道府県データ ===== */
+
+const prefectures = [
+{ id:"hokkaido", name:"北海道", region:"北海道" },
+{ id:"aomori", name:"青森県", region:"東北" },
+{ id:"iwate", name:"岩手県", region:"東北" },
+{ id:"miyagi", name:"宮城県", region:"東北" },
+{ id:"akita", name:"秋田県", region:"東北" },
+{ id:"yamagata", name:"山形県", region:"東北" },
+{ id:"fukushima", name:"福島県", region:"東北" },
+{ id:"ibaraki", name:"茨城県", region:"関東" },
+{ id:"tochigi", name:"栃木県", region:"関東" },
+{ id:"gunma", name:"群馬県", region:"関東" },
+{ id:"saitama", name:"埼玉県", region:"関東" },
+{ id:"chiba", name:"千葉県", region:"関東" },
+{ id:"tokyo", name:"東京都", region:"関東" },
+{ id:"kanagawa", name:"神奈川県", region:"関東" },
+{ id:"niigata", name:"新潟県", region:"中部" },
+{ id:"toyama", name:"富山県", region:"中部" },
+{ id:"ishikawa", name:"石川県", region:"中部" },
+{ id:"fukui", name:"福井県", region:"中部" },
+{ id:"yamanashi", name:"山梨県", region:"中部" },
+{ id:"nagano", name:"長野県", region:"中部" },
+{ id:"gifu", name:"岐阜県", region:"中部" },
+{ id:"shizuoka", name:"静岡県", region:"中部" },
+{ id:"aichi", name:"愛知県", region:"中部" },
+{ id:"mie", name:"三重県", region:"近畿" },
+{ id:"shiga", name:"滋賀県", region:"近畿" },
+{ id:"kyoto", name:"京都府", region:"近畿" },
+{ id:"osaka", name:"大阪府", region:"近畿" },
+{ id:"hyogo", name:"兵庫県", region:"近畿" },
+{ id:"nara", name:"奈良県", region:"近畿" },
+{ id:"wakayama", name:"和歌山県", region:"近畿" },
+{ id:"tottori", name:"鳥取県", region:"中国" },
+{ id:"shimane", name:"島根県", region:"中国" },
+{ id:"okayama", name:"岡山県", region:"中国" },
+{ id:"hiroshima", name:"広島県", region:"中国" },
+{ id:"yamaguchi", name:"山口県", region:"中国" },
+{ id:"tokushima", name:"徳島県", region:"四国" },
+{ id:"kagawa", name:"香川県", region:"四国" },
+{ id:"ehime", name:"愛媛県", region:"四国" },
+{ id:"kochi", name:"高知県", region:"四国" },
+{ id:"fukuoka", name:"福岡県", region:"九州" },
+{ id:"saga", name:"佐賀県", region:"九州" },
+{ id:"nagasaki", name:"長崎県", region:"九州" },
+{ id:"kumamoto", name:"熊本県", region:"九州" },
+{ id:"oita", name:"大分県", region:"九州" },
+{ id:"miyazaki", name:"宮崎県", region:"九州" },
+{ id:"kagoshima", name:"鹿児島県", region:"九州" },
+{ id:"okinawa", name:"沖縄県", region:"沖縄" }
+];
+
+/* ===== 状態保存 ===== */
+
+function saveState(){
+  const active = [];
+  prefectures.forEach(pref=>{
+    const el=document.querySelector("g."+pref.id);
+    if(el && el.classList.contains("active")){
+      active.push(pref.id);
+    }
+  });
+  localStorage.setItem("prefState", JSON.stringify(active));
+}
+
+/* ===== 状態復元 ===== */
+
+function loadState(){
+  const saved = JSON.parse(localStorage.getItem("prefState") || "[]");
+
+  saved.forEach(id=>{
+    const mapEl=document.querySelector("g."+id);
+    const btnEl=document.querySelector(`[data-pref="${id}"]`);
+
+    if(mapEl) mapEl.classList.add("active");
+    if(btnEl) btnEl.classList.add("active");
+  });
+}
+
+/* ===== SVG読み込み ===== */
+
+const wrapper=document.getElementById("mapWrapper");
+
+fetch("map-mobile.svg")
+.then(r=>r.text())
+.then(svg=>{
+  wrapper.innerHTML=svg;
+
+  prefectures.forEach(pref=>{
+    const el=document.querySelector("g."+pref.id);
+    if(el){
+      el.classList.add("prefecture");
+      el.addEventListener("click",()=>togglePref(pref.id));
+    }
+  });
+
+  loadState(); // ←復元
+});
+
+/* ===== ボタン生成 ===== */
+
+const list=document.getElementById("pref-list");
+
+prefectures.forEach(pref=>{
+  const btn=document.createElement("button");
+  btn.className="pref-btn";
+  btn.dataset.pref=pref.id;
+
+  btn.innerHTML=`
+    <span>${pref.name}</span>
+    <span class="region-name">${pref.region}</span>
+  `;
+
+  btn.onclick=()=>togglePref(pref.id);
+  list.appendChild(btn);
+});
+
+/* ===== リセットボタン ===== */
+
+const resetBtn=document.createElement("button");
+resetBtn.className="pref-btn reset-btn";
+resetBtn.textContent="リセット";
+
+resetBtn.onclick=()=>{
+  localStorage.removeItem("prefState");
+
+  document.querySelectorAll(".prefecture.active").forEach(el=>{
+    el.classList.remove("active");
+  });
+
+  document.querySelectorAll(".pref-btn.active").forEach(el=>{
+    el.classList.remove("active");
+  });
+};
+
+list.appendChild(resetBtn);
+
+/* ===== 選択処理 ===== */
+
+function togglePref(id){
+  const mapEl=document.querySelector("g."+id);
+  const btnEl=document.querySelector(`[data-pref="${id}"]`);
+  if(!mapEl)return;
+
+  mapEl.classList.toggle("active");
+  btnEl.classList.toggle("active");
+
+  saveState(); // ←保存
+}
+
+/* ===== ピンチ＆ドラッグ ===== */
+
+let scale=1;
+let startDist=0;
+let translateX=0;
+let translateY=0;
+let startX=0;
+let startY=0;
+let isDragging=false;
+
+const mapArea=document.getElementById("mapArea");
+
+mapArea.addEventListener("touchstart",e=>{
+  if(e.touches.length===2){
+    startDist=getDistance(e.touches);
+  }
+  if(e.touches.length===1 && scale>1){
+    isDragging=true;
+    startX=e.touches[0].clientX-translateX;
+    startY=e.touches[0].clientY-translateY;
+  }
+});
+
+mapArea.addEventListener("touchmove",e=>{
+  if(e.touches.length===2){
+    e.preventDefault();
+    let newDist=getDistance(e.touches);
+    let zoom=newDist/startDist;
+    scale*=zoom;
+    scale=Math.min(Math.max(scale,1),4);
+    startDist=newDist;
+    updateTransform();
+  }
+  else if(e.touches.length===1 && isDragging){
+    e.preventDefault();
+    translateX=e.touches[0].clientX-startX;
+    translateY=e.touches[0].clientY-startY;
+    updateTransform();
+  }
+},{passive:false});
+
+mapArea.addEventListener("touchend",()=>{
+  isDragging=false;
+  if(scale===1){
+    translateX=0;
+    translateY=0;
+    updateTransform();
+  }
+});
+
+function updateTransform(){
+  wrapper.style.transform=
+    `translate(${translateX}px,${translateY}px) scale(${scale})`;
+}
+
+function getDistance(t){
+  let dx=t[0].clientX-t[1].clientX;
+  let dy=t[0].clientY-t[1].clientY;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+</script>
+</body>
+</html>
