@@ -65,8 +65,8 @@ button {
 
 .btn1 { background: linear-gradient(135deg, #ff7eb3, #ff758c); }
 .btn2 { background: linear-gradient(135deg, #f6d365, #fda085); }
-.btn4 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-.btn3 { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+.btn3 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+.btn4 { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
 
 /* 色ボタンエリア */
 .color-area {
@@ -76,35 +76,37 @@ button {
   margin-top: 10px;
 }
 
-/* 色ボタン（正方形） */
+/* 色ボタン */
 .color-btn {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 10px;
-  border: 2px solid transparent;
+  border: 2px solid #999; /* 枠線 */
   cursor: pointer;
   transition: 0.2s;
 }
 
-/* 選択状態（凹み） */
+/* 選択状態 */
 .color-btn.active {
-  transform: scale(0.9);
-  box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
-  border: 2px solid #333;
+  transform: scale(0.85);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+  border: 3px solid #333;
 }
 
-/* 色 */
-  .c-pink   { background:#FF69B4; }
-  .c-red    { background:#FF0000; }
-  .c-orange { background:#FFA500; }
-  .c-yellow { background:#FFD700; }
-  .c-blue   { background:#00CFFF; }
-  .c-navy   { background:#0000FF; }
-  .c-green  { background:#4CAF50; }
-  .c-lime   { background:#8BC34A; }
-  .c-purple { background:#a18cd1; }
-  .c-white  { background:#FFFFFF; }
-  button:hover {
+/* 10色 */
+.c-pink   { background:#FF69B4; }
+.c-red    { background:#FF0000; }
+.c-orange { background:#FFA500; }
+.c-yellow { background:#FFD700; }
+.c-blue   { background:#00CFFF; }
+.c-navy   { background:#0000FF; }
+.c-green  { background:#4CAF50; }
+.c-lime   { background:#8BC34A; }
+.c-purple { background:#a18cd1; }
+.c-white  { background:#FFFFFF; border:2px solid #666; }
+
+/* ボタン動き */
+button:hover {
   transform: translateY(-2px);
 }
 
@@ -113,7 +115,6 @@ button:active {
 }
 
 </style>
-
 </head>
 
 <body>
@@ -125,35 +126,47 @@ button:active {
     <input type="text" name="message" placeholder="お名前を入力">
 
     <button class="btn1" type="submit" onclick="setAction('MVP999.html')">MVP（紙吹雪）</button>
-    <button class="btn2" type="submit" onclick="setAction('map.html')">全国制覇</button>
-    <button class="btn4" type="submit" onclick="setAction('MVP_sakura.html')">MVP（桜吹雪）</button>
-  
-  <!-- 色選択 -->
-  <div class="color-area">
-    <div class="color-btn c-pink"   onclick="selectColor('pink', this)"></div>
-    <div class="color-btn c-red"    onclick="selectColor('red', this)"></div>
-    <div class="color-btn c-orange" onclick="selectColor('orange', this)"></div>
-    <div class="color-btn c-yellow" onclick="selectColor('yellow', this)"></div>
-    <div class="color-btn c-blue"   onclick="selectColor('blue', this)"></div>
-    <div class="color-btn c-navy"   onclick="selectColor('navy', this)"></div>
-    <div class="color-btn c-green"  onclick="selectColor('green', this)"></div>
-    <div class="color-btn c-lime"   onclick="selectColor('lime', this)"></div>
-    <div class="color-btn c-purple" onclick="selectColor('purple', this)"></div>
-    <div class="color-btn c-white"  onclick="selectColor('white', this)"></div>
-  </div>
+    <button class="btn2" type="submit" onclick="setAction('MVP_sakura.html')">MVP（桜吹雪）</button>
+    <button class="btn3" type="submit" onclick="setAction('map.html')">全国制覇</button>
 
+    <!-- 最下部 -->
+    <button class="btn4" type="submit" onclick="setAction('mvp_Pink.html')">MVP_PINK</button>
 
-    <!-- 隠しフィールド -->
+    <!-- 色選択 -->
+    <div class="color-area">
+      <div class="color-btn c-pink"   onclick="selectColor('pink', this)"></div>
+      <div class="color-btn c-red"    onclick="selectColor('red', this)"></div>
+      <div class="color-btn c-orange" onclick="selectColor('orange', this)"></div>
+      <div class="color-btn c-yellow" onclick="selectColor('yellow', this)"></div>
+      <div class="color-btn c-blue"   onclick="selectColor('blue', this)"></div>
+      <div class="color-btn c-navy"   onclick="selectColor('navy', this)"></div>
+      <div class="color-btn c-green"  onclick="selectColor('green', this)"></div>
+      <div class="color-btn c-lime"   onclick="selectColor('lime', this)"></div>
+      <div class="color-btn c-purple" onclick="selectColor('purple', this)"></div>
+      <div class="color-btn c-white"  onclick="selectColor('white', this)"></div>
+    </div>
+
+    <!-- hidden -->
     <input type="hidden" name="color" id="colorInput">
-
   </form>
 </div>
 
 <script>
 let selectedColor = "";
 
-// 色選択
+// 色選択（トグル）
 function selectColor(color, el){
+
+  // 同じ色なら解除
+  if(selectedColor === color){
+    selectedColor = "";
+    document.getElementById("colorInput").value = "";
+
+    document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+    return;
+  }
+
+  // 新規選択
   selectedColor = color;
   document.getElementById("colorInput").value = color;
 
@@ -161,7 +174,7 @@ function selectColor(color, el){
   el.classList.add('active');
 }
 
-// 送信先設定
+// 遷移先
 function setAction(url){
   document.getElementById('myForm').action = url;
 }
