@@ -1,156 +1,184 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Info</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info</title>
 
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
 
-body {
-  background-image: url('photos/mvp2.png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    body {
+      background-image: url('photos/mvp2.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-#message-box {
-  width: 80vw;
-  height: 35vh;
-  padding: 1vh 2vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
+    #message-box {
+      width: 80vw;
+      height: 35vh;
+      padding: 1vh 2vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
 
-#message-text {
-  font-size: 12vw;
-  line-height: 1;
-  white-space: nowrap;
-  transform-origin: center center;
-  display: inline-block;
-  transform: scaleX(-1);
-  font-family: "Yu Gothic", "Meiryo", sans-serif;
-  color: white;
-  font-weight: bold;
-}
+    #message-text {
+      font-size: 12vw;
+      line-height: 1;
+      white-space: nowrap;
+      transform-origin: center center;
+      display: inline-block;
+      transform: scaleX(-1);
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      color: white;
+      font-weight: bold;
+    }
 
-@media (max-width: 768px) {
-  #message-text { font-size: 15vw; }
-}
-@media (max-width: 600px) {
-  #message-text { font-size: 20vw; }
-}
-</style>
+    @media (max-width: 600px) {
+      #message-text {
+        font-size: 20vw;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #message-text {
+        font-size: 15vw;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="message-box">
-  <div id="message-text"></div>
-</div>
+  <div id="message-box">
+    <div id="message-text"></div>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- 紙吹雪ライブラリ -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<script>
-/* =========================
-   初期処理
-========================= */
-const params = new URLSearchParams(window.location.search);
-const message = params.get('message');
-const colorType = params.get('color');
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('message');
+    const colorType = params.get('color') || 'normal';
 
-const textEl = document.getElementById('message-text');
-const boxEl = document.getElementById('message-box');
+    const textEl = document.getElementById('message-text');
+    const boxEl = document.getElementById('message-box');
 
-/* 文字表示 */
-if (message) {
-  textEl.textContent = message;
+    // メッセージ表示
+    if (message) {
+      textEl.textContent = message;
 
-  function adjustScale() {
-    const scale = Math.min(
-      boxEl.clientWidth / textEl.scrollWidth,
-      boxEl.clientHeight / textEl.scrollHeight,
-      1
-    );
-    textEl.style.transform = `scaleX(-1) scale(${scale})`;
-  }
+      function adjustScale() {
+        const boxWidth = boxEl.clientWidth;
+        const boxHeight = boxEl.clientHeight;
+        const textWidth = textEl.scrollWidth;
+        const textHeight = textEl.scrollHeight;
+        const scaleX = boxWidth / textWidth;
+        const scaleY = boxHeight / textHeight;
+        const scale = Math.min(scaleX, scaleY, 1);
+        textEl.style.transform = `scaleX(-1) scale(${scale})`;
+      }
 
-  window.addEventListener('resize', adjustScale);
-  adjustScale();
-}
+      window.addEventListener('resize', adjustScale);
+      adjustScale();
+    }
 
-/* =========================
-   色定義（完全固定）
-========================= */
-function getColors(type){
-  switch(type){
-    case 'pink':   return ['#FF69B4','#ff8fc7','#ffc1dd'];
-    case 'red':    return ['#FF3B3B','#ff6b6b','#ff9e9e'];
-    case 'orange': return ['#FFA500','#ffbe55','#ffd89a'];
-    case 'yellow': return ['#FFD700','#ffe45c','#fff3a3'];
-    case 'blue':   return ['#00CFFF','#66e0ff','#b3f0ff'];
-    case 'navy':   return ['#3D5AFE','#6f85ff','#aab8ff'];
-    case 'green':  return ['#2E7D32','#4CAF50','#81C784'];
-    case 'lime':   return ['#8BC34A','#aed581','#dcedc8'];
-    case 'purple': return ['#B39DDB','#d1c4e9','#ede7f6'];
-    case 'white':  return ['#ffffff','#eeeeee','#dddddd'];
+    // 🌈 最適化カラー（10色）
+    function getColors(type){
+      switch(type){
 
-    // 未選択（通常紙吹雪）
-    default:
-      return ['#FFD700', '#FFFFFF', '#FF0000', '#00CFFF'];
-  }
-}
+        case 'pink':
+          return ['#FF69B4','#FFB6C1','#FFC0CB'];
 
-/* =========================
-   クリック制御（完全ロック）
-========================= */
-let fired = false;
+        case 'red':
+          return ['#FF0000','#FF4D4D','#FF9999'];
 
-/* 他のクリックイベントを完全無効化 */
-document.onclick = null;
+        case 'orange':
+          return ['#FF8C00','#FFA500','#FFD180'];
 
-/* これだけが唯一のイベント */
-document.onclick = function () {
+        case 'yellow':
+          return ['#FFC107','#FFD700','#FFF59D'];
 
-  if (fired) return; // 2回目防止
-  fired = true;
+        case 'blue':
+          return ['#0099CC','#00CFFF','#B3ECFF'];
 
-  const colors = getColors(colorType);
+        case 'navy':
+          return ['#0000FF','#4D66FF','#99A3FF'];
 
-  function fire(side) {
-    confetti({
-      particleCount: 160,
-      spread: 70,
-      startVelocity: 60,
-      gravity: 0.9,
-      ticks: 250,
-      scalar: 2.4,
-      origin: {
-        x: side === 'left' ? 0 : 1,
-        y: 1
-      },
-      angle: side === 'left' ? 60 : 120,
-      colors: colors
+        case 'green':
+          return ['#2E7D32','#4CAF50','#A5D6A7'];
+
+        case 'lime':
+          return ['#689F38','#8BC34A','#DCEDC8'];
+
+        case 'purple':
+          return ['#7B1FA2','#A18CD1','#E1BEE7'];
+
+        case 'white':
+          return ['#FFFFFF','#EEEEEE','#CCCCCC'];
+
+        default:
+          return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
+      }
+    }
+
+    // 🌸 桜風クラッカー（色対応）
+    document.addEventListener('click', function () {
+
+      function fire(side) {
+        confetti({
+          particleCount: 180,
+          spread: 75,
+          startVelocity: 60,
+          gravity: 0.55,
+          ticks: 320,
+
+          // サイズ大きめ＋バラつき（重要）
+          scalar: Math.random() * 1.2 + 1.4,
+
+          origin: {
+            x: side === 'left' ? 0 : 1,
+            y: 1
+          },
+
+          angle: side === 'left' ? 60 : 120,
+
+          colors: getColors(colorType),
+
+          shapes: ['circle'],
+
+          drift: side === 'left' ? 0.8 : -0.8,
+
+          spin: Math.random() * 3 + 2
+        });
+      }
+
+      // メイン発射
+      fire('left');
+      fire('right');
+
+      // 少し遅延して自然に
+      setTimeout(() => {
+        fire('left');
+        fire('right');
+      }, 120);
+
     });
-  }
-
-  fire('left');
-  fire('right');
-};
-</script>
+  </script>
 
 </body>
 </html>
