@@ -67,7 +67,7 @@
     <div id="message-text"></div>
   </div>
 
-  <!-- 紙吹雪ライブラリ -->
+  <!-- 紙吹雪 -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
@@ -97,7 +97,7 @@
       adjustScale();
     }
 
-    // 🌈 最適化カラー（10色）
+    // 🌈 カラー設定
     function getColors(type){
       switch(type){
 
@@ -131,24 +131,65 @@
         case 'white':
           return ['#FFFFFF','#EEEEEE','#CCCCCC'];
 
+        case 'gold':
+          return ['#FFD700','#FFF4B0','#FFEC8B','#FFE066'];
+
+        case 'silver':
+          return ['#C0C0C0','#E8E8E8','#A9A9A9','#F5F5F5'];
+
         default:
           return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
       }
     }
 
-    // 🌸 桜風クラッカー（色対応）
+    // 🎆 発射設定（色ごとに変化）
+    function getEffectSettings(type, side){
+
+      return {
+        particleCount: type === 'gold' ? 220 : 180,
+
+        spread: type === 'silver' ? 60 : 75,
+
+        startVelocity: type === 'gold' ? 70 : 60,
+
+        gravity:
+          type === 'silver' ? 0.38 :
+          type === 'gold' ? 0.5 :
+          0.55,
+
+        ticks: type === 'silver' ? 380 : 320,
+
+        scalar:
+          type === 'gold'
+            ? Math.random() * 1.6 + 1.8   // キラキラ大きめ
+            : Math.random() * 1.2 + 1.4,
+
+        drift:
+          type === 'silver'
+            ? (side === 'left' ? 0.4 : -0.4)  // ゆっくり揺れ
+            : (side === 'left' ? 0.8 : -0.8),
+
+        spin:
+          type === 'gold'
+            ? Math.random() * 5 + 3   // よく回る
+            : Math.random() * 3 + 2
+      };
+    }
+
+    // 🎉 クリックで発射
     document.addEventListener('click', function () {
 
       function fire(side) {
-        confetti({
-          particleCount: 180,
-          spread: 75,
-          startVelocity: 60,
-          gravity: 0.55,
-          ticks: 320,
 
-          // サイズ大きめ＋バラつき（重要）
-          scalar: Math.random() * 1.2 + 1.4,
+        const effect = getEffectSettings(colorType, side);
+
+        confetti({
+          particleCount: effect.particleCount,
+          spread: effect.spread,
+          startVelocity: effect.startVelocity,
+          gravity: effect.gravity,
+          ticks: effect.ticks,
+          scalar: effect.scalar,
 
           origin: {
             x: side === 'left' ? 0 : 1,
@@ -161,9 +202,8 @@
 
           shapes: ['circle'],
 
-          drift: side === 'left' ? 0.8 : -0.8,
-
-          spin: Math.random() * 3 + 2
+          drift: effect.drift,
+          spin: effect.spin
         });
       }
 
@@ -171,7 +211,7 @@
       fire('left');
       fire('right');
 
-      // 少し遅延して自然に
+      // 遅延発射（自然な広がり）
       setTimeout(() => {
         fire('left');
         fire('right');
