@@ -13,12 +13,17 @@ body{
   font-family:sans-serif;
   background:#e6f4ff;
   overflow:hidden;
+
+  /* ★全体反転 */
+  transform: scaleX(-1);
 }
 
+/* ★中身を元に戻す */
 .container{
   display:flex;
   height:100vh;
   overflow:hidden;
+  transform: scaleX(-1);
 }
 
 /* ===== PC ===== */
@@ -237,7 +242,7 @@ fetch("map-mobile.svg")
     }
   });
 
-  loadState(); // ←復元
+  loadState();
 });
 
 /* ===== ボタン生成 ===== */
@@ -288,7 +293,7 @@ function togglePref(id){
   mapEl.classList.toggle("active");
   btnEl.classList.toggle("active");
 
-  saveState(); // ←保存
+  saveState();
 }
 
 /* ===== ピンチ＆ドラッグ ===== */
