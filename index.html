@@ -16,98 +16,120 @@ body {
   align-items: center;
 }
 
+/* カード */
 .container {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(12px);
-  border-radius: 25px;
-  padding: 25px;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(14px);
+  border-radius: 30px;
+  padding: 28px 22px;
   width: 90%;
   max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
   text-align: center;
 }
 
-h1 {
-  font-size: 22px;
-  margin-bottom: 20px;
+/* タイトル */
+.main-title {
+  font-size: 24px;
   color: #ff5c8a;
+  margin-bottom: 18px;
+  font-weight: bold;
 }
 
-.form-area {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
+/* 入力欄 */
 input[type="text"] {
   width: 100%;
-  padding: 14px;
-  border-radius: 18px;
+  padding: 16px;
+  border-radius: 22px;
   border: none;
   font-size: 16px;
   box-sizing: border-box;
-  background: #fff;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+  background: #f7f7f7;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
 }
 
+/* ボタン */
 button {
   width: 100%;
-  padding: 14px;
-  border-radius: 18px;
+  padding: 15px;
+  border-radius: 25px;
   border: none;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
   color: #fff;
+  transition: 0.15s;
 }
 
-.btn1 { background: linear-gradient(135deg, #ff7eb3, #ff758c); }
-.btn2 { background: linear-gradient(135deg, #f6d365, #fda085); }
-.btn3 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-.btn4 { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+/* メインボタン */
+.btn-main {
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  margin-bottom: 22px;
+}
 
-/* 色ボタンエリア */
+/* サブボタン */
+.btn-sub {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  margin-top: 18px;
+}
+
+/* セクションタイトル */
+.section-title {
+  font-size: 20px;
+  color: #ff5c8a;
+  margin: 10px 0 4px 0;
+  font-weight: bold;
+}
+
+/* 補足テキスト */
+.sub-text {
+  font-size: 14px;
+  color: #ff8aa5;
+  margin-bottom: 12px;
+}
+
+/* 色エリア */
 .color-area {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
-/* 色ボタン（サイズ固定・立体） */
+/* 色ボタン */
 .color-btn {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  border: 2px solid #999;
+  border-radius: 14px;
+  border: 2px solid #ccc;
   cursor: pointer;
   transition: 0.15s;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-sizing: border-box;
 }
 
-/* 選択状態（サイズ変えない） */
+/* 選択状態 */
 .color-btn.active {
-  border: 4px solid #333; /* ←枠色変化 */
+  border: 4px solid #ff5c8a;
   box-shadow:
-    inset 0 4px 10px rgba(0,0,0,0.6),
-    inset 0 -2px 4px rgba(255,255,255,0.3);
+    inset 0 5px 12px rgba(0,0,0,0.4),
+    inset 0 -2px 5px rgba(255,255,255,0.3);
 }
 
-/* 10色 */
+/* 色 */
 .c-pink   { background:#FF69B4; }
-.c-red    { background:#FF0000; }
+.c-red    { background:#FF3B3B; }
 .c-orange { background:#FFA500; }
 .c-yellow { background:#FFD700; }
 .c-blue   { background:#00CFFF; }
-.c-navy   { background:#0000FF; }
+.c-navy   { background:#3D5AFE; }
 .c-green  { background:#4CAF50; }
 .c-lime   { background:#8BC34A; }
-.c-purple { background:#a18cd1; }
-.c-white  { background:#FFFFFF; border:2px solid #666; }
+.c-purple { background:#B39DDB; }
+.c-white  { background:#FFFFFF; border:2px solid #bbb; }
 
-/* 押した瞬間だけ軽く反応（ホバーなし） */
+/* タップ時 */
 button:active {
   transform: scale(0.97);
 }
@@ -118,17 +140,20 @@ button:active {
 <body>
 
 <div class="container">
-  <h1>名前を入力</h1>
 
-  <form id="myForm" method="get" class="form-area">
+  <div class="main-title">名前を入力</div>
+
+  <form id="myForm" method="get">
+
     <input type="text" name="message" placeholder="お名前を入力">
 
-    <button class="btn1" type="submit" onclick="setAction('MVP_sakura.html')">ＭＶＰ</button>
+    <button class="btn-main" type="submit" onclick="setAction('MVP_sakura.html')">
+      ＭＶＰ
+    </button>
 
-    <h1>紙吹雪の色を選択</h1>
-    <h1>選択しない場合は通常の紙吹雪</h1>
-    
-    <!-- 色選択 -->
+    <div class="section-title">紙吹雪の色を選択</div>
+    <div class="sub-text">※選択しない場合は通常の紙吹雪になります</div>
+
     <div class="color-area">
       <div class="color-btn c-pink"   onclick="selectColor('pink', this)"></div>
       <div class="color-btn c-red"    onclick="selectColor('red', this)"></div>
@@ -142,16 +167,18 @@ button:active {
       <div class="color-btn c-white"  onclick="selectColor('white', this)"></div>
     </div>
 
-    <button class="btn2" type="submit" onclick="setAction('map.html')">全国制覇</button>
-    
+    <button class="btn-sub" type="submit" onclick="setAction('map.html')">
+      全国制覇
+    </button>
+
     <input type="hidden" name="color" id="colorInput">
+
   </form>
 </div>
 
 <script>
 let selectedColor = "";
 
-// 色選択（再タップ解除対応）
 function selectColor(color, el){
 
   if(selectedColor === color){
@@ -169,7 +196,6 @@ function selectColor(color, el){
   el.classList.add('active');
 }
 
-// 遷移先設定
 function setAction(url){
   document.getElementById('myForm').action = url;
 }
