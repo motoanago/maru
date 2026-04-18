@@ -97,49 +97,62 @@
       adjustScale();
     }
 
-    // 🌈 色取得（10色＋デフォルト）
+    // 🌈 色設定（10色＋デフォルト）
     function getColors(type){
       switch(type){
-        case 'pink':   return ['#FF69B4'];
-        case 'red':    return ['#FF0000'];
-        case 'orange': return ['#FFA500'];
-        case 'yellow': return ['#FFD700'];
-        case 'blue':   return ['#00CFFF'];
-        case 'navy':   return ['#0000FF'];
-        case 'green':  return ['#4CAF50'];
-        case 'lime':   return ['#8BC34A'];
-        case 'purple': return ['#A18CD1'];
-        case 'white':  return ['#FFFFFF'];
+        case 'pink':   return ['#FFC0CB','#FF69B4','#FFD1DC'];
+        case 'red':    return ['#FF0000','#FF6666'];
+        case 'orange': return ['#FFA500','#FFD580'];
+        case 'yellow': return ['#FFD700','#FFF176'];
+        case 'blue':   return ['#00CFFF','#66E0FF'];
+        case 'navy':   return ['#0000FF','#6666FF'];
+        case 'green':  return ['#4CAF50','#A5D6A7'];
+        case 'lime':   return ['#8BC34A','#DCE775'];
+        case 'purple': return ['#A18CD1','#D1C4E9'];
+        case 'white':  return ['#FFFFFF','#EEEEEE'];
         default:
           return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
       }
     }
 
-    // 🎉 クリックでクラッカー（元の迫力）
+    // 🌸 桜風クラッカー（色対応）
     document.addEventListener('click', function () {
 
       function fire(side) {
         confetti({
-          particleCount: 160,
-          spread: 70,
+          particleCount: 180,
+          spread: 75,
           startVelocity: 60,
-          gravity: 0.9,
-          ticks: 250,
-          scalar: 2.4,
+          gravity: 0.55,
+          ticks: 320,
+          scalar: Math.random() * 0.8 + 1.2,
+
           origin: {
             x: side === 'left' ? 0 : 1,
             y: 1
           },
+
           angle: side === 'left' ? 60 : 120,
-          colors: getColors(colorType)
+
+          colors: getColors(colorType),
+
+          shapes: ['circle'],
+
+          drift: side === 'left' ? 0.8 : -0.8,
+
+          spin: Math.random() * 3 + 2
         });
       }
 
       fire('left');
       fire('right');
 
-    });
+      setTimeout(() => {
+        fire('left');
+        fire('right');
+      }, 120);
 
+    });
   </script>
 
 </body>
