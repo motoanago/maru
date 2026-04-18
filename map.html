@@ -40,7 +40,13 @@ html{
 }
 
 .map-wrapper{
-  transform-origin:center center;
+  transform: scaleX(-1);
+}
+
+/* SVG内の文字だけ戻す */
+.map-wrapper text{
+  transform: scaleX(-1);
+  transform-origin: center;
 }
 
 .map-area svg{
