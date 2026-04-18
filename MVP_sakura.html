@@ -73,9 +73,12 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const message = params.get('message');
+    const colorType = params.get('color') || 'normal';
+
     const textEl = document.getElementById('message-text');
     const boxEl = document.getElementById('message-box');
 
+    // メッセージ表示
     if (message) {
       textEl.textContent = message;
 
@@ -94,52 +97,49 @@
       adjustScale();
     }
 
-    // 🌸 クリックで桜クラッカー（連打OK）
+    // 🌈 色取得（10色＋デフォルト）
+    function getColors(type){
+      switch(type){
+        case 'pink':   return ['#FF69B4'];
+        case 'red':    return ['#FF0000'];
+        case 'orange': return ['#FFA500'];
+        case 'yellow': return ['#FFD700'];
+        case 'blue':   return ['#00CFFF'];
+        case 'navy':   return ['#0000FF'];
+        case 'green':  return ['#4CAF50'];
+        case 'lime':   return ['#8BC34A'];
+        case 'purple': return ['#A18CD1'];
+        case 'white':  return ['#FFFFFF'];
+        default:
+          return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
+      }
+    }
+
+    // 🎉 クリックでクラッカー（元の迫力）
     document.addEventListener('click', function () {
 
       function fire(side) {
         confetti({
-          particleCount: 180,           // ボリューム
-          spread: 75,                  // 広がり（元の感じ）
-          startVelocity: 60,           // 勢い（重要）
-          gravity: 0.55,               // 少し軽くして桜感
-          ticks: 320,
-          scalar: Math.random() * 0.8 + 1.2, // サイズばらつき
-
+          particleCount: 160,
+          spread: 70,
+          startVelocity: 60,
+          gravity: 0.9,
+          ticks: 250,
+          scalar: 2.4,
           origin: {
             x: side === 'left' ? 0 : 1,
             y: 1
           },
-
           angle: side === 'left' ? 60 : 120,
-
-          colors: [
-            '#FFC0CB',
-            '#FFB6C1',
-            '#FF69B4',
-            '#FFD1DC',
-            '#FFF0F5'
-          ],
-
-          shapes: ['circle'],
-
-          drift: side === 'left' ? 0.8 : -0.8, // 横揺れ
-
-          spin: Math.random() * 3 + 2           // 回転（ヒラヒラ）
+          colors: getColors(colorType)
         });
       }
 
-      // メイン発射（元の動き）
       fire('left');
       fire('right');
 
-      // 少し遅らせて追加（自然な広がり）
-      setTimeout(() => {
-        fire('left');
-        fire('right');
-      }, 120);
-
     });
+
   </script>
 
 </body>
