@@ -1,224 +1,200 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Info</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Info</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
 
-    body {
-      background-image: url('photos/mvp2.png');
-      background-size: 100% 100%;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+body {
+  background-image: url('photos/mvp2.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    #message-box {
-      width: 80vw;
-      height: 35vh;
-      padding: 1vh 2vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 10px;
-      box-sizing: border-box;
-      overflow: hidden;
-    }
+#message-box {
+  width: 80vw;
+  height: 35vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    #message-text {
-      font-size: 12vw;
-      line-height: 1;
-      white-space: nowrap;
-      transform-origin: center center;
-      display: inline-block;
-      transform: scaleX(-1);
-      font-family: "Yu Gothic", "Meiryo", sans-serif;
-      color: white;
-      font-weight: bold;
-    }
+#message-text {
+  font-size: 12vw;
+  white-space: nowrap;
+  transform: scaleX(-1);
+  font-family: "Yu Gothic", "Meiryo", sans-serif;
+  color: white;
+  font-weight: bold;
+}
 
-    @media (max-width: 600px) {
-      #message-text {
-        font-size: 20vw;
-      }
-    }
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkleAnim 0.8s ease-out forwards;
+}
 
-    @media (max-width: 768px) {
-      #message-text {
-        font-size: 15vw;
-      }
-    }
-  </style>
+@keyframes sparkleAnim {
+  0% {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div id="message-box">
-    <div id="message-text"></div>
-  </div>
+<div id="message-box">
+  <div id="message-text"></div>
+</div>
 
-  <!-- 紙吹雪 -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const message = params.get('message');
-    const colorType = params.get('color') || 'normal';
+<script>
+const params = new URLSearchParams(window.location.search);
+const message = params.get('message');
+const colorType = params.get('color') || 'normal';
 
-    const textEl = document.getElementById('message-text');
-    const boxEl = document.getElementById('message-box');
+const textEl = document.getElementById('message-text');
 
-    // メッセージ表示
-    if (message) {
-      textEl.textContent = message;
+// メッセージ
+if (message) {
+  textEl.textContent = message;
+}
 
-      function adjustScale() {
-        const boxWidth = boxEl.clientWidth;
-        const boxHeight = boxEl.clientHeight;
-        const textWidth = textEl.scrollWidth;
-        const textHeight = textEl.scrollHeight;
-        const scaleX = boxWidth / textWidth;
-        const scaleY = boxHeight / textHeight;
-        const scale = Math.min(scaleX, scaleY, 1);
-        textEl.style.transform = `scaleX(-1) scale(${scale})`;
-      }
+// カラー
+function getColors(type){
+  switch(type){
+    case 'gold':
+      return ['#FFD700','#FFF8DC','#FFEC8B','#FFFFFF'];
+    case 'silver':
+      return ['#C0C0C0','#E8E8E8','#FFFFFF','#B0B0B0'];
+    case 'pink':
+      return ['#FF69B4','#FFB6C1','#FFC0CB'];
+    default:
+      return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
+  }
+}
 
-      window.addEventListener('resize', adjustScale);
-      adjustScale();
-    }
+// キラキラ点滅生成
+function createSparkle(x, y, color){
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.style.left = x + 'px';
+  s.style.top = y + 'px';
+  s.style.background = color;
+  document.body.appendChild(s);
 
-    // 🌈 カラー設定
-    function getColors(type){
-      switch(type){
+  setTimeout(() => s.remove(), 800);
+}
 
-        case 'pink':
-          return ['#FF69B4','#FFB6C1','#FFC0CB'];
+// 発射
+function fire(side){
 
-        case 'red':
-          return ['#FF0000','#FF4D4D','#FF9999'];
+  const isSpecial = (colorType === 'gold' || colorType === 'silver');
 
-        case 'orange':
-          return ['#FF8C00','#FFA500','#FFD180'];
+  // メイン
+  confetti({
+    particleCount: isSpecial ? 220 : 180,
+    spread: 75,
+    startVelocity: isSpecial ? 70 : 60,
+    gravity: colorType === 'silver' ? 0.38 : 0.55,
+    ticks: 320,
 
-        case 'yellow':
-          return ['#FFC107','#FFD700','#FFF59D'];
+    scalar: isSpecial
+      ? Math.random() * 1.6 + 1.8
+      : Math.random() * 1.2 + 1.4,
 
-        case 'blue':
-          return ['#0099CC','#00CFFF','#B3ECFF'];
+    origin: {
+      x: side === 'left' ? 0 : 1,
+      y: 1
+    },
 
-        case 'navy':
-          return ['#0000FF','#4D66FF','#99A3FF'];
+    angle: side === 'left' ? 60 : 120,
 
-        case 'green':
-          return ['#2E7D32','#4CAF50','#A5D6A7'];
+    colors: getColors(colorType),
 
-        case 'lime':
-          return ['#689F38','#8BC34A','#DCEDC8'];
+    shapes: isSpecial ? ['star'] : ['circle'],
 
-        case 'purple':
-          return ['#7B1FA2','#A18CD1','#E1BEE7'];
+    drift: side === 'left' ? 0.8 : -0.8,
+    spin: isSpecial
+      ? Math.random() * 6 + 4
+      : Math.random() * 3 + 2
+  });
 
-        case 'white':
-          return ['#FFFFFF','#EEEEEE','#CCCCCC'];
+  // 白キラ粒（発光）
+  if(isSpecial){
+    confetti({
+      particleCount: 100,
+      spread: 90,
+      startVelocity: 80,
+      gravity: 0.4,
+      ticks: 200,
+      scalar: Math.random() * 1.2 + 1.5,
 
-        case 'gold':
-          return ['#FFD700','#FFF4B0','#FFEC8B','#FFE066'];
+      origin: {
+        x: side === 'left' ? 0 : 1,
+        y: 1
+      },
 
-        case 'silver':
-          return ['#C0C0C0','#E8E8E8','#A9A9A9','#F5F5F5'];
+      angle: side === 'left' ? 60 : 120,
 
-        default:
-          return ['#FFD700','#FFFFFF','#FF0000','#00CFFF'];
-      }
-    }
-
-    // 🎆 発射設定（色ごとに変化）
-    function getEffectSettings(type, side){
-
-      return {
-        particleCount: type === 'gold' ? 220 : 180,
-
-        spread: type === 'silver' ? 60 : 75,
-
-        startVelocity: type === 'gold' ? 70 : 60,
-
-        gravity:
-          type === 'silver' ? 0.38 :
-          type === 'gold' ? 0.5 :
-          0.55,
-
-        ticks: type === 'silver' ? 380 : 320,
-
-        scalar:
-          type === 'gold'
-            ? Math.random() * 1.6 + 1.8   // キラキラ大きめ
-            : Math.random() * 1.2 + 1.4,
-
-        drift:
-          type === 'silver'
-            ? (side === 'left' ? 0.4 : -0.4)  // ゆっくり揺れ
-            : (side === 'left' ? 0.8 : -0.8),
-
-        spin:
-          type === 'gold'
-            ? Math.random() * 5 + 3   // よく回る
-            : Math.random() * 3 + 2
-      };
-    }
-
-    // 🎉 クリックで発射
-    document.addEventListener('click', function () {
-
-      function fire(side) {
-
-        const effect = getEffectSettings(colorType, side);
-
-        confetti({
-          particleCount: effect.particleCount,
-          spread: effect.spread,
-          startVelocity: effect.startVelocity,
-          gravity: effect.gravity,
-          ticks: effect.ticks,
-          scalar: effect.scalar,
-
-          origin: {
-            x: side === 'left' ? 0 : 1,
-            y: 1
-          },
-
-          angle: side === 'left' ? 60 : 120,
-
-          colors: getColors(colorType),
-
-          shapes: ['circle'],
-
-          drift: effect.drift,
-          spin: effect.spin
-        });
-      }
-
-      // メイン発射
-      fire('left');
-      fire('right');
-
-      // 遅延発射（自然な広がり）
-      setTimeout(() => {
-        fire('left');
-        fire('right');
-      }, 120);
-
+      colors: ['#FFFFFF'],
+      shapes: ['star'],
+      drift: side === 'left' ? 1 : -1,
+      spin: Math.random() * 8 + 5
     });
-  </script>
+
+    // ✨ 点滅エフェクト（ここが本物感）
+    for(let i=0;i<20;i++){
+      setTimeout(()=>{
+        createSparkle(
+          Math.random() * window.innerWidth,
+          Math.random() * window.innerHeight,
+          colorType === 'gold' ? '#FFF8DC' : '#FFFFFF'
+        );
+      }, i * 80);
+    }
+  }
+}
+
+// クリックで発射
+document.addEventListener('click', () => {
+
+  fire('left');
+  fire('right');
+
+  setTimeout(()=>{
+    fire('left');
+    fire('right');
+  },120);
+
+});
+</script>
 
 </body>
 </html>
