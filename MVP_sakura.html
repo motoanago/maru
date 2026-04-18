@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-image: url('photos/mvp2.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #message-box {
+      width: 80vw;
+      height: 35vh;
+      padding: 1vh 2vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #message-text {
+      font-size: 12vw;
+      line-height: 1;
+      white-space: nowrap;
+      transform-origin: center center;
+      display: inline-block;
+      transform: scaleX(-1);
+      font-family: "Yu Gothic", "Meiryo", sans-serif;
+      color: white;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      #message-text {
+        font-size: 20vw;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #message-text {
+        font-size: 15vw;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="message-box">
+    <div id="message-text"></div>
+  </div>
+
+  <!-- 紙吹雪ライブラリ -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get('message');
+    const textEl = document.getElementById('message-text');
+    const boxEl = document.getElementById('message-box');
+
+    if (message) {
+      textEl.textContent = message;
+
+      function adjustScale() {
+        const boxWidth = boxEl.clientWidth;
+        const boxHeight = boxEl.clientHeight;
+        const textWidth = textEl.scrollWidth;
+        const textHeight = textEl.scrollHeight;
+        const scaleX = boxWidth / textWidth;
+        const scaleY = boxHeight / textHeight;
+        const scale = Math.min(scaleX, scaleY, 1);
+        textEl.style.transform = `scaleX(-1) scale(${scale})`;
+      }
+
+      window.addEventListener('resize', adjustScale);
+      adjustScale();
+    }
+
+    // 🌸 桜吹雪（回転＋ふわふわ）
+    document.addEventListener('click', function () {
+
+      function fire(side) {
+        confetti({
+          particleCount: 70,
+          spread: 120,
+          startVelocity: 20,
+          gravity: 0.35,
+          ticks: 450,
+          scalar: Math.random() * 0.6 + 0.5,
+          drift: side === 'left' ? 0.6 : -0.6,
+          origin: {
+            x: side === 'left' ? 0 : 1,
+            y: 1
+          },
+          angle: side === 'left' ? 70 : 110,
+
+          // 🌸 桜カラー
+          colors: [
+            '#FFC0CB',
+            '#FFB6C1',
+            '#FF69B4',
+            '#FFD1DC',
+            '#FFF0F5'
+          ],
+
+          // 🌸 花びらっぽく（楕円風）
+          shapes: ['circle'],
+
+          // 🌸 回転を強調
+          spin: Math.random() * 2 + 1
+        });
+      }
+
+      // 1回目
+      fire('left');
+      fire('right');
+
+      // 少し遅れて追加（自然な舞い）
+      setTimeout(() => {
+        fire('left');
+        fire('right');
+      }, 180);
+
+      setTimeout(() => {
+        fire('left');
+        fire('right');
+      }, 360);
+
+    });
+  </script>
+
+</body>
+</html>
